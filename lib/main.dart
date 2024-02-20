@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'view/login/standby_screen.dart';
+import 'screen/signin/standby.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
         fontFamily: 'NotoSansJP',
       ),
-      home: const StandBy(title: 'フォントテスト検証'),
+      home: const StandBy(),
     );
   }
 }
