@@ -15,8 +15,8 @@ class _AppScreenState extends State<AppScreen> {
 
   final _pageWidgets = [
     ElectionList(),
-    Article(),
     PopularVote(),
+    Article(),
   ];
 
   @override

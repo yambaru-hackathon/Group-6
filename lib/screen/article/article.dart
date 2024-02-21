@@ -27,7 +27,7 @@ class _ArticleState extends State<Article> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'This is popular vote screen.',
+              'This is article screen.',
             ),
             ElevatedButton(
               onPressed: () {
@@ -36,7 +36,7 @@ class _ArticleState extends State<Article> {
                   MaterialPageRoute(builder: (context) => const Politician())
                 );
               },
-              child: const Text('to article screen')
+              child: const Text('to politiciana screen')
             )
           ],
         ),
