@@ -8,26 +8,57 @@ class PopularVote extends StatefulWidget {
 }
 
 class _PopularVoteState extends State<PopularVote> {
-  // int _counter = 0;
+  bool isRunning = false; //ボタンの時に変化する用
+  int popularVotePoint = 100; //使える残りのポイント数
+  int popularVoteCurrentPoint = 0; //今から投票するポイント
+  //int _counter = 0;
 
-  void _incrementCounter() {
-    // setState(() {
-    //   _counter++;
-    // });
+  //void _incrementCounter() {
+  //  setState(() {
+  //    _counter++;
+  //  });
+  //}
+
+  void toggleSwitch() {
+    setState(() {
+      isRunning = !isRunning;
+    });
+  }
+
+  void changePoint(value) {
+    setState(() {
+      value ? popularVotePoint-- : popularVotePoint++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
-      body: const Center(
+      appBar: AppBar(),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'This is popular vote screen.',
             ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: () {
+                      changePoint(true);
+                    },
+                    child: const Icon(Icons.remove),
+                  ),
+                  Text('$popularVotePoint'),
+                  FloatingActionButton(
+                    onPressed: () {
+                      changePoint(false);
+                    },
+                    child: const Icon(Icons.add),
+                  ),
+                ]),
           ],
         ),
       ),
