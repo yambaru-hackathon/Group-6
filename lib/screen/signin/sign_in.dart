@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import '../../provider/auth_service.dart';
 import '../App.dart';
 
 class SignIn extends StatefulWidget {
@@ -18,50 +20,61 @@ class _ProfileData{
 FormFieldValidator _requiredValidator(BuildContext context) => (val) => val.isEmpty ? "必須" : null;
 
 class _SignInState extends State<SignIn> {
-  // int _counter = 0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _ProfileData _data = _ProfileData();
+  final _authService = AuthService();
 
-  //入力の重複調べる変数
+  // 入力の重複調べる変数
   TextEditingController emailin = TextEditingController();
   TextEditingController emailAgainin = TextEditingController();
   TextEditingController passin = TextEditingController();
   TextEditingController passAgainin = TextEditingController();
 
-  //入力のフォーカス用変数
+  // 入力のフォーカス用変数
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _descriptionFocusNode = FocusNode();
   FocusNode _nameFocusNodeAgain = FocusNode();
   FocusNode _descriptionFocusNodeAgain = FocusNode();
 
-  //入力の重複用ブール
+  // 入力の重複用ブール
   bool passMismatch = false;
   bool emailMismatch = false;
   
-  //入力の表示非表示
+  // signIn失敗のブール
+  bool signInFailed = false;
+  
+  // 入力の表示非表示
   bool _isObscure = true;
   bool _isObscureAgain = true;
 
-  void _submit() {
+  Future<void> _submit() async {
     // バリデートして問題なければ実行
     if (_formKey.currentState!.validate() & !passMismatch & !emailMismatch) {
       // TextFormField の onSavedを実行
       _formKey.currentState!.save();
 
-      // 入力内容
-      debugPrint('Name: ${_data.email}');
-      debugPrint('Description: ${_data.pass}');
-
       // キーボードを隠す（それぞれのonSavedに書いたほうがいいかも）
       _nameFocusNode.unfocus();
       _descriptionFocusNode.unfocus();
-
-      // TODO 送信処理
-
-      Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AppScreen())
-              );
+      
+      try{
+        await _authService.signIn(_data.email, _data.pass);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AppScreen())
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+        setState(() {
+          signInFailed = true;
+        });
+      }
+      // debugPrint(FirebaseAuth.instance.currentUser?.uid);
+      // ignore: use_build_context_synchronously
     }
   }
   @override
@@ -71,6 +84,8 @@ class _SignInState extends State<SignIn> {
     _descriptionFocusNode = FocusNode();
     _nameFocusNodeAgain = FocusNode();
     _descriptionFocusNodeAgain = FocusNode();
+
+    signInFailed = false;
   }
 
   @override
@@ -123,6 +138,12 @@ class _SignInState extends State<SignIn> {
                 fontFamily: 'Murecho'
               ),
             ),
+            Text(
+              signInFailed ? 'password or email is wrong' : '',
+              style: const TextStyle(
+                color: Colors.red,
+              ),
+            ),
             const SizedBox(height: 5,),
             Expanded(
               child: Padding(
@@ -135,7 +156,7 @@ class _SignInState extends State<SignIn> {
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'email', border: OutlineInputBorder()),
                         validator: _requiredValidator(context),
-                        maxLength: 10,
+                        maxLength: 100,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         focusNode: _nameFocusNode,
                         onSaved: (String? value) => _data.email = value!,
@@ -159,7 +180,7 @@ class _SignInState extends State<SignIn> {
                           errorText: emailMismatch ? 'email do not match' : null,
                           ),
                         validator: _requiredValidator(context),
-                        maxLength: 10,
+                        maxLength: 100,
                         maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         focusNode: _nameFocusNodeAgain,
                         onSaved: (String? value) => _data.emailAgain = value!,

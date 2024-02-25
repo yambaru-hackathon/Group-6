@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDu9oqfKNnfu1W2pKcucjycSTjygb706CA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>622334209327</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.happyhappyhappy.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>happyhappyhappy-3ae81</string>
+	<key>STORAGE_BUCKET</key>
+	<string>happyhappyhappy-3ae81.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:622334209327:ios:56a6ba74d62990450285da</string>
+	<key>DATABASE_URL</key>
+	<string>https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
