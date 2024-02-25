@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:navigator_scope/navigator_scope.dart';
 import 'election/election_list.dart';
-import 'article/article.dart';
+import 'politician/timeline.dart';
 import 'popular_vote/popular_vote.dart';
 
 class AppScreen extends StatefulWidget {
@@ -49,7 +49,7 @@ class _AppScreenState extends State<AppScreen> {
             builder: (context) => [
               ElectionList(),
               PopularVote(),
-              Article(),
+              Timeline(),
             ][index],
           ); 
         },
