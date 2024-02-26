@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-PreferredSize myAppBar(String title) {
+PreferredSize myAppBar(BuildContext context, String title) {
   return PreferredSize(
     preferredSize: const Size.fromHeight(kToolbarHeight),
     child: AppBar(
@@ -10,7 +10,7 @@ PreferredSize myAppBar(String title) {
         IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // do something
+            Scaffold.of(context).openEndDrawer();
           },
         ),
         const SizedBox(width: 5),
