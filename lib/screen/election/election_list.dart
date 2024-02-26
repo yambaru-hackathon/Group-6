@@ -20,21 +20,30 @@ class _ElectionListState extends State<ElectionList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'This is election list screen.',
-            ),
-            ElevatedButton(
-              onPressed: () {Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LowerHouse())
-              );},
-              child: const Text('to lower house election screen')),
+            ListWheelScrollView(itemExtent: 30, children: [
+              for (var i in List.generate(10, (i) => i))
+                Container(
+                    width: 200,
+                    color: Colors.cyanAccent,
+                    child: Center(child: Text((i + 1).toString() + " 番目")))
+            ]),
+
+//            const Text(
+//              'This is election list screen.',
+//            ),
+//            ElevatedButton(
+//                onPressed: () {
+//                  Navigator.push(
+//                      context,
+//                      MaterialPageRoute(
+//                          builder: (context) => const LowerHouse()));
+//                },
+//                child: const Text('to lower house election screen')),
           ],
         ),
       ),
