@@ -21,7 +21,7 @@ class _ArticleState extends State<Article> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar('Article'),
+      appBar: myAppBar(context, 'Article'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
