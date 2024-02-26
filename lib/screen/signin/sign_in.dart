@@ -24,12 +24,6 @@ class _SignInState extends State<SignIn> {
   final _ProfileData _data = _ProfileData();
   final _authService = AuthService();
 
-  // 入力の重複調べる変数
-  TextEditingController emailin = TextEditingController();
-  TextEditingController emailAgainin = TextEditingController();
-  TextEditingController passin = TextEditingController();
-  TextEditingController passAgainin = TextEditingController();
-
   // 入力のフォーカス用変数
   FocusNode _nameFocusNode = FocusNode();
   FocusNode _descriptionFocusNode = FocusNode();
@@ -167,38 +161,6 @@ class _SignInState extends State<SignIn> {
                         // focus移動
                         textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_descriptionFocusNode),
-
-                        // 重複用
-                        controller: emailin,
-                      ),
-                      const SizedBox(height: 5.0),
-                      //eメール入力フォーム(アゲイン)
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'email Again', 
-                          border: OutlineInputBorder(),
-                          errorText: emailMismatch ? 'email do not match' : null,
-                          ),
-                        validator: _requiredValidator(context),
-                        maxLength: 100,
-                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        focusNode: _nameFocusNodeAgain,
-                        onSaved: (String? value) => _data.emailAgain = value!,
-                        // focus当てとく
-                        autofocus: true,
-              
-                        // focus移動
-                        textInputAction: TextInputAction.next,
-                        onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_descriptionFocusNode),
-
-                        // 重複用
-                        controller: emailAgainin,
-
-                        onChanged: (value) {
-                          setState(() {
-                            emailMismatch = emailin.text != value;
-                          });
-                        },
                       ),
                       const SizedBox(height: 16.0),
                       //パスワード入力フィールド(ノーマル)
@@ -224,44 +186,6 @@ class _SignInState extends State<SignIn> {
                         // 複数行対応
                         // keyboardType: TextInputType.multiline,
                         // maxLines: null,
-
-                        // 重複用
-                        controller: passin,
-                      ),
-                      const SizedBox(height: 5.0),
-                      //パスワード入力フィールド(アゲイン)
-                      TextFormField(
-                        obscureText: _isObscureAgain,
-                        decoration: InputDecoration(
-                          labelText: 'password Again', 
-                          border: const OutlineInputBorder(),
-                          errorText: passMismatch ? 'password do not match' : null,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isObscureAgain = !_isObscureAgain;
-                              });
-                            }, 
-                            icon: Icon(_isObscureAgain ? Icons.visibility_off : Icons.visibility)
-                            ),
-                        ),
-                        validator: _requiredValidator(context),
-                        maxLength: 10,
-                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                        focusNode: _descriptionFocusNodeAgain,
-                        onSaved: (String? value) => _data.passAgain = value!,
-                        // 複数行対応
-                        // keyboardType: TextInputType.multiline,
-                        // maxLines: null,
-
-                        // 重複用
-                        controller: passAgainin,
-
-                        onChanged: (value) {
-                          setState(() {
-                            passMismatch = passin.text != value;
-                          });
-                        },
                       ),
                       const SizedBox(height: 5.0),
                       ElevatedButton(onPressed: _submit, child: const Text('Submit'))
