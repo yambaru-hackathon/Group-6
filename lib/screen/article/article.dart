@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../politician/politician.dart';
+import '../../components/app_bar.dart';
 
 class Article extends StatefulWidget {
   const Article({super.key});
@@ -20,8 +21,7 @@ class _ArticleState extends State<Article> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: myAppBar(context, 'Article'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
