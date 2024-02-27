@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sign_in.dart';
+import '../signup/sign_up.dart';
 
 class StandBy extends StatefulWidget {
   const StandBy({super.key});
@@ -38,7 +39,7 @@ class _StandByState extends State<StandBy> {
             ElevatedButton(
               onPressed: () {Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SignIn())
+                MaterialPageRoute(builder: (context) => const SignUp())
               );},
               child: const Text('to sign up')),
           ],
