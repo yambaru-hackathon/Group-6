@@ -10,3 +10,11 @@ git clone が完了したらとりあえずやってほしいこと
 ```
 flutter run
 ```
+
+### テストユーザー
+email: hogehoge@gmail.com
+password: hogehoge
+
+email: aaaaaa@gmail.com
+password: aaaaaa 
+

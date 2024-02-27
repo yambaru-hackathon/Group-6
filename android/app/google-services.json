@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "622334209327",
+    "firebase_url": "https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "happyhappyhappy-3ae81",
+    "storage_bucket": "happyhappyhappy-3ae81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622334209327:android:2deb78c41211ee100285da",
+        "android_client_info": {
+          "package_name": "com.example.happyhappyhappy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6LJjH9FYwlo33l0lde3ZuU1bbBGAOrRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

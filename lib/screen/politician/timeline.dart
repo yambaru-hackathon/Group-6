@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import '../politician/politician.dart';
-import '../../components/app_bar.dart';
 
-class Article extends StatefulWidget {
-  const Article({super.key});
+class Timeline extends StatefulWidget {
+  const Timeline({super.key});
 
   @override
-  State<Article> createState() => _ArticleState();
+  State<Timeline> createState() => _TimelineState();
 }
 
-class _ArticleState extends State<Article> {
+class _TimelineState extends State<Timeline> {
   // int _counter = 0;
 
   void _incrementCounter() {
@@ -21,13 +20,14 @@ class _ArticleState extends State<Article> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(context, 'Article'),
+      appBar: AppBar(
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'This is article screen.',
+              'This is Timeline screen.',
             ),
             ElevatedButton(
               onPressed: () {
@@ -36,7 +36,7 @@ class _ArticleState extends State<Article> {
                   MaterialPageRoute(builder: (context) => const Politician())
                 );
               },
-              child: const Text('to politiciana screen')
+              child: const Text('to politician screen')
             )
           ],
         ),
