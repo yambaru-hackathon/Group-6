@@ -101,6 +101,48 @@ body: Column(
   }
 }
 
+/*class CheckBox extends StatefulWidget{
+  @override
+  _CheckboxState createState() => _CheckboxState();
+}*/
+
+/*class _CheckboxState extends State<CheckBox> {
+  bool isChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      title: Text('Checkbox'),
+      value: isChecked,
+      onChanged: (bool? value) {
+        setState(() {
+          isChecked = value!;
+        });
+      },
+    );
+  }
+}*/
+class CheckboxWidget extends StatefulWidget {
+  @override
+  _CheckboxWidgetState createState() => _CheckboxWidgetState();
+}
+
+class _CheckboxWidgetState extends State<CheckboxWidget> {
+  bool isChecked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Checkbox(
+      value: isChecked,
+      onChanged: (bool? value) {
+        setState(() {
+          isChecked = value!;
+        });
+      },
+    );
+  }
+}
+
 class _LowerHouseState extends State<LowerHouse> {
   // int _counter = 0;
 
@@ -234,10 +276,9 @@ class _LowerHouseState extends State<LowerHouse> {
                     ),
                   ),
                   Spacer(),
-                  Image.asset(
-                    'assets/images/politician_img.png',
-                    width: 24.0,
-                    height: 24.0,
+                  //CheckBox(),
+                  Center(
+                    child: CheckboxWidget(),
                   ),
                 ],
               ),
