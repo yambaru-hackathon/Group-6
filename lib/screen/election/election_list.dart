@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import '../../components/app_bar.dart';
 import 'lower_house.dart';
@@ -9,17 +10,47 @@ class ElectionList extends StatefulWidget {
   State<ElectionList> createState() => _ElectionListState();
 }
 
+class ListGenerator {
+  static Map<String, dynamic> generateList(int i) {
+    Map<String, dynamic> map = {};
+
+    i == 1
+        ? map['page'] = 'LowerHouse'
+        : i == 2
+            ? map['page'] = 'UpperHouse'
+            : map['page'] = 'AnotherHouse';
+
+    i == 1
+        ? map['id'] = '衆議院選挙'
+        : i == 2
+            ? map['id'] = '参議院選挙'
+            : map['id'] = 'その他の選挙$i';
+    map['year'] = '$i';
+    map['date'] = '$i';
+    return map;
+  }
+}
+
+class TwoDimensionalListGenerator {
+  List<Map<String, dynamic>> generateTwoDimensionalList(int rows) {
+    List<Map<String, dynamic>> twoDList = [];
+    for (int j = 0; j < rows; j++) {
+      Map<String, dynamic> sampleList = {'order': j};
+      sampleList.addAll(ListGenerator.generateList(j));
+      twoDList.add(sampleList);
+    }
+    return twoDList;
+  }
+}
+
 class _ElectionListState extends State<ElectionList> {
   final _controller = FixedExtentScrollController(initialItem: 0);
-  double _height = 200;
+  String page = 'test';
 
-//  int _counter = 0;
+  final List<Map<String, dynamic>> _electionList =
+      TwoDimensionalListGenerator().generateTwoDimensionalList(6);
 
-  void _incrementCounter() {
-    // setState(() {
-    //   _counter++;
-    // });
-  }
+  //そこに飛ぶ
   void _scroll(position) {
     _controller.animateToItem(position,
         duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -33,7 +64,7 @@ class _ElectionListState extends State<ElectionList> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
+        color: Color.fromARGB(255, 255, 255, 255),
         child: Column(
 //          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -41,8 +72,8 @@ class _ElectionListState extends State<ElectionList> {
               height: 400,
               child: ListWheelScrollView(
                 controller: _controller,
-                diameterRatio: 20, //リストの間の幅
-                itemExtent: _height, //リストの幅
+                diameterRatio: 50, //リストの間の幅
+                itemExtent: 150, //リストの幅
 //                overAndUnderCenterOpacity: 0.5, //透明度
                 perspective: 0.0001, //まるみ
                 useMagnifier: false, //拡大するか否か
@@ -52,46 +83,64 @@ class _ElectionListState extends State<ElectionList> {
                   // update the UI on selected item changes
                   setState(() {
                     _selectedItemIndex = index;
+                    page = _electionList[index]['page'];
                   });
                 },
                 children: [
-                  for (var i in List.generate(10, (i) => i))
+                  for (var map in _electionList)
                     Container(
+                      width: 500,
+                      height: 300,
                       child: Card(
                         shadowColor: Colors.black,
-                        elevation: _selectedItemIndex == i ? 30 : 0,
-                        margin: _selectedItemIndex == i
+                        elevation: _selectedItemIndex == map['order'] ? 30 : 0,
+                        margin: _selectedItemIndex == map['order']
                             ? const EdgeInsets.only(
                                 right: 60,
                                 left: 60,
                               )
-                            : const EdgeInsets.only(
-                                top: 30,
-                                bottom: 30,
-                                right: 90,
-                                left: 90,
-                              ),
-                        color: _selectedItemIndex != i
-                            ? Colors.white
-                            : Color.fromARGB(255, 99, 112, 255),
+                            : _selectedItemIndex < map['order']
+                                ? const EdgeInsets.only(
+                                    top: 10,
+                                    bottom: 30,
+                                    right: 90,
+                                    left: 90,
+                                  )
+                                : const EdgeInsets.only(
+                                    top: 30,
+                                    bottom: 10,
+                                    right: 90,
+                                    left: 90,
+                                  ),
+                        color: _selectedItemIndex == map['order']
+                            ? Color.fromARGB(255, 99, 112, 255)
+                            : _selectedItemIndex + 1 == map['order'] ||
+                                    _selectedItemIndex - 1 == map['order']
+                                ? Colors.white
+                                : Colors.transparent,
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
-                            color: const Color.fromARGB(255, 50, 61, 180), //色
+                            color: _selectedItemIndex + 1 == map['order'] ||
+                                    _selectedItemIndex - 1 == map['order']
+                                ? const Color.fromARGB(255, 50, 61, 180)
+                                : Colors.transparent, //色
                             width: 2, //太さ
                           ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: _selectedItemIndex < i
-                                ? Radius.zero
-                                : Radius.circular(10),
-                            topRight: _selectedItemIndex < i
-                                ? Radius.zero
-                                : Radius.circular(10),
-                            bottomLeft: _selectedItemIndex > i
-                                ? Radius.zero
-                                : Radius.circular(10),
-                            bottomRight: _selectedItemIndex > i
-                                ? Radius.zero
-                                : Radius.circular(10),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                            // BorderRadius.only(
+//                            topLeft: _selectedItemIndex < map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            topRight: _selectedItemIndex < map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            bottomLeft: _selectedItemIndex > map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            bottomRight: _selectedItemIndex > map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
                           ),
                         ),
                         child: InkWell(
@@ -99,14 +148,21 @@ class _ElectionListState extends State<ElectionList> {
                               .withAlpha(30),
                           onTap: () {
                             setState(() {
-                              _selectedItemIndex = i;
-                              _scroll(i);
+                              _selectedItemIndex = map['order'];
+                              _scroll(map['order']);
+                              page = map['page'];
                             });
                             debugPrint('Card taped');
                           },
                           child: Center(
                             child: Text(
-                              (i + 1).toString() + " 番目",
+                              _selectedItemIndex == map['order']
+                                  ? (map['id']) +
+                                      '\n' +
+                                      (map['year']).toString() +
+                                      '/' +
+                                      (map['date']).toString()
+                                  : (map['id']),
                               style: TextStyle(
                                 fontSize: 20,
                               ),
@@ -122,13 +178,35 @@ class _ElectionListState extends State<ElectionList> {
               'This is election list screen.',
             ),
             ElevatedButton(
-                onPressed: () {
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LowerHouse()),
+                );
+              },
+              child: const Text('to lower house election screen'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (page == 'LowerHouse') {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LowerHouse()));
-                },
-                child: const Text('to lower house election screen')),
+                    context,
+                    MaterialPageRoute(builder: (context) => LowerHouse()),
+                  );
+                } else if (page == 'UpperHouse') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UpperHouse()),
+                  );
+                } else if (page == 'AnotherHouse') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AnotherHouse()),
+                  );
+                }
+              },
+              child: const Text('投票画面へGO!'),
+            ),
           ],
         ),
       ),
