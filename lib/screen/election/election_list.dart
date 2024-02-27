@@ -196,12 +196,12 @@ class _ElectionListState extends State<ElectionList> {
                 } else if (page == 'UpperHouse') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UpperHouse()),
+                    MaterialPageRoute(builder: (context) => LowerHouse()),
                   );
                 } else if (page == 'AnotherHouse') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AnotherHouse()),
+                    MaterialPageRoute(builder: (context) => LowerHouse()),
                   );
                 }
               },
