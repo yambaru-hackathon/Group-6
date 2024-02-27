@@ -60,7 +60,7 @@ class _ElectionListState extends State<ElectionList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar('選挙を選ぶ'),
+      appBar: myAppBar(context, '選挙を選ぶ'),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
