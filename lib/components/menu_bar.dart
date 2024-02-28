@@ -1,8 +1,12 @@
+// package
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
-import '../provider/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+// local
+import '../provider/auth_service.dart';
 
 class MyMenuBar extends StatefulWidget {
   MyMenuBar({super.key});
@@ -13,11 +17,13 @@ class MyMenuBar extends StatefulWidget {
 
 class _MyMenuBarState extends State<MyMenuBar> {
   final AuthService _authService = AuthService();
+  final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
 
   // 郵便番号
   String postcode = '';
   String postcodeFirst = '';
-  
+
   //選挙区コード
   String prefectureCode = '';
   String districtNum = '';
@@ -29,12 +35,14 @@ class _MyMenuBarState extends State<MyMenuBar> {
 
   // 郵便番号から選挙区を取得
   Future<void> loadJsonAsset() async {
-    final String hireiJsonString = await rootBundle.loadString('assets/json/hirei.json');
+    final String hireiJsonString =
+        await rootBundle.loadString('assets/json/hirei.json');
     final dynamic hireiJsonResponse = json.decode(hireiJsonString);
-    final String postalJsonString = await rootBundle.loadString('assets/json/postal2senkyoku.light.json');
+    final String postalJsonString =
+        await rootBundle.loadString('assets/json/postal2senkyoku.light.json');
     final dynamic postalJsonResponse = json.decode(postalJsonString);
     setState(() {
-      try{
+      try {
         if (postalJsonResponse[postcodeFirst] != null) {
           prefectureCode = postalJsonResponse[postcodeFirst]['p'];
           districtNum = postalJsonResponse[postcodeFirst]['s'];
@@ -58,14 +66,19 @@ class _MyMenuBarState extends State<MyMenuBar> {
     debugPrint(electoralDistrictText);
   }
 
+  Future<void> fetchUserData() async {
+    final userData = await db.collection('users').doc(auth.currentUser?.uid).get();
+    setState(() {
+      postcode = userData['postcode'];
+      postcodeFirst = postcode.substring(0, 3);
+    });
+    loadJsonAsset();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
-    postcode = '9052171';
-    postcodeFirst = postcode.substring(0, 3);
-
-    loadJsonAsset();
+    fetchUserData();
   }
 
   @override
@@ -81,31 +94,25 @@ class _MyMenuBarState extends State<MyMenuBar> {
                   height: 0,
                   width: 300,
                 ),
-                Text(
-                  '選挙区',
-                  style: TextStyle(
-                    fontSize: 20,
-                  )
+                Text('選挙区',
+                    style: TextStyle(
+                      fontSize: 20,
+                    )),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text('比例区  $hireiDistrictTextブロック',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    '比例区  $hireiDistrictTextブロック',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    '小選挙区  $electoralDistrictText',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
+                  child: Text('小選挙区  $electoralDistrictText',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ),
                 Text('郵便番号: $postcode'),
               ],
@@ -122,4 +129,3 @@ class _MyMenuBarState extends State<MyMenuBar> {
     );
   }
 }
-
