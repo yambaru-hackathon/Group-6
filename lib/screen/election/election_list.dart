@@ -64,14 +64,14 @@ class _ElectionListState extends ConsumerState<ElectionList> {
 
   void _fetchData() async {
     // データベースから選挙情報を取得
-    lowerHouseData = await electionData.doc('lower_house').get();
-    upperHouseData = await electionData.doc('upper_house').get();
+    lowerHouseData = await electionData.doc('lowerHouse').get();
+    upperHouseData = await electionData.doc('upperHouse').get();
 
     setState(() {
       _electionList[0]['id'] = lowerHouseData['name'];
       _electionList[1]['id'] = upperHouseData['name'];
-      _electionList[0]['date'] = "${lowerHouseData['until_date']} まで";
-      _electionList[1]['date'] = "${upperHouseData['until_date']} まで";
+      _electionList[0]['date'] = "${lowerHouseData['untilDate']} まで";
+      _electionList[1]['date'] = "${upperHouseData['untilDate']} まで";
     });
   }
 
