@@ -44,42 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBEKosSME6X9SNpxOTo1S4qF0u1yDEMlco',
-    appId: '1:622334209327:web:e893fe0cdb7cfea60285da',
-    messagingSenderId: '622334209327',
-    projectId: 'happyhappyhappy-3ae81',
-    authDomain: 'happyhappyhappy-3ae81.firebaseapp.com',
-    databaseURL: 'https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'happyhappyhappy-3ae81.appspot.com',
-    measurementId: 'G-2478RHMPTT',
+    apiKey: 'AIzaSyCfndnlYOqGkADHxV0BV_kX3mC3BTboWYU',
+    appId: '1:99875069672:web:89ad7296b3a8ee5629735d',
+    messagingSenderId: '99875069672',
+    projectId: 'happyhappyhappy2-e2ceb',
+    authDomain: 'happyhappyhappy2-e2ceb.firebaseapp.com',
+    storageBucket: 'happyhappyhappy2-e2ceb.appspot.com',
+    measurementId: 'G-Q8BYCHHNZL',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC6LJjH9FYwlo33l0lde3ZuU1bbBGAOrRo',
-    appId: '1:622334209327:android:2deb78c41211ee100285da',
-    messagingSenderId: '622334209327',
-    projectId: 'happyhappyhappy-3ae81',
-    databaseURL: 'https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'happyhappyhappy-3ae81.appspot.com',
+    apiKey: 'AIzaSyCot9_jZo7V4ayF6_eUWnk1ZWFwLaPDW-I',
+    appId: '1:99875069672:android:a040e5cb453a29e329735d',
+    messagingSenderId: '99875069672',
+    projectId: 'happyhappyhappy2-e2ceb',
+    storageBucket: 'happyhappyhappy2-e2ceb.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDu9oqfKNnfu1W2pKcucjycSTjygb706CA',
-    appId: '1:622334209327:ios:f90f039381f057570285da',
-    messagingSenderId: '622334209327',
-    projectId: 'happyhappyhappy-3ae81',
-    databaseURL: 'https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'happyhappyhappy-3ae81.appspot.com',
+    apiKey: 'AIzaSyCN1iiw7shd33aj5X01bmb-t49N5jb5D0g',
+    appId: '1:99875069672:ios:7ccbff403376746529735d',
+    messagingSenderId: '99875069672',
+    projectId: 'happyhappyhappy2-e2ceb',
+    storageBucket: 'happyhappyhappy2-e2ceb.appspot.com',
     iosBundleId: 'com.example.happyhappyhappy',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDu9oqfKNnfu1W2pKcucjycSTjygb706CA',
-    appId: '1:622334209327:ios:56a6ba74d62990450285da',
-    messagingSenderId: '622334209327',
-    projectId: 'happyhappyhappy-3ae81',
-    databaseURL: 'https://happyhappyhappy-3ae81-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'happyhappyhappy-3ae81.appspot.com',
+    apiKey: 'AIzaSyCN1iiw7shd33aj5X01bmb-t49N5jb5D0g',
+    appId: '1:99875069672:ios:56370a2878cf150529735d',
+    messagingSenderId: '99875069672',
+    projectId: 'happyhappyhappy2-e2ceb',
+    storageBucket: 'happyhappyhappy2-e2ceb.appspot.com',
     iosBundleId: 'com.example.happyhappyhappy.RunnerTests',
   );
 }
