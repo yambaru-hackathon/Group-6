@@ -1,28 +1,30 @@
-import 'dart:ffi';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar.dart';
 import 'lower_house.dart';
 
-class ElectionList extends StatefulWidget {
+class ElectionList extends ConsumerStatefulWidget {
   const ElectionList({super.key});
 
   @override
-  State<ElectionList> createState() => _ElectionListState();
+  ConsumerState<ElectionList> createState() => _ElectionListState();
 }
 
 class ListGenerator {
+
   static Map<String, dynamic> generateList(int i) {
     Map<String, dynamic> map = {};
 
-    i == 1
-        ? map['page'] = 'LowerHouse'
-        : i == 2
-            ? map['page'] = 'UpperHouse'
+    i == 0
+        ? map['page'] = 'lower_house'
+        : i == 1
+            ? map['page'] = 'upper_house'
             : map['page'] = 'AnotherHouse';
 
-    i == 1
+    i == 0
         ? map['id'] = '衆議院選挙'
-        : i == 2
+        : i == 1
             ? map['id'] = '参議院選挙'
             : map['id'] = 'その他の選挙$i';
     map['year'] = '$i';
@@ -43,12 +45,16 @@ class TwoDimensionalListGenerator {
   }
 }
 
-class _ElectionListState extends State<ElectionList> {
+class _ElectionListState extends ConsumerState<ElectionList> {
+  final CollectionReference<Map<String, dynamic>> electionData = FirebaseFirestore.instance.collection('elections');
+  var lowerHouseData;
+  var upperHouseData;
+
   final _controller = FixedExtentScrollController(initialItem: 0);
   String page = 'test';
 
   final List<Map<String, dynamic>> _electionList =
-      TwoDimensionalListGenerator().generateTwoDimensionalList(6);
+      TwoDimensionalListGenerator().generateTwoDimensionalList(2);
 
   //そこに飛ぶ
   void _scroll(position) {
@@ -56,9 +62,24 @@ class _ElectionListState extends State<ElectionList> {
         duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
+  void _fetchData() async {
+    // データベースから選挙情報を取得
+    lowerHouseData = await electionData.doc('lower_house').get();
+    upperHouseData = await electionData.doc('upper_house').get();
+
+    setState(() {
+      _electionList[0]['id'] = lowerHouseData['name'];
+      _electionList[1]['id'] = upperHouseData['name'];
+      _electionList[0]['date'] = "${lowerHouseData['until_date']} まで";
+      _electionList[1]['date'] = "${upperHouseData['until_date']} まで";
+    });
+  }
+
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
+    _fetchData();
+
     return Scaffold(
       appBar: myAppBar(context, '選挙を選ぶ'),
       body: Container(
@@ -159,8 +180,6 @@ class _ElectionListState extends State<ElectionList> {
                               _selectedItemIndex == map['order']
                                   ? (map['id']) +
                                       '\n' +
-                                      (map['year']).toString() +
-                                      '/' +
                                       (map['date']).toString()
                                   : (map['id']),
                               style: TextStyle(
@@ -174,26 +193,14 @@ class _ElectionListState extends State<ElectionList> {
                 ],
               ),
             ),
-            Text(
-              'This is election list screen.',
-            ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LowerHouse()),
-                );
-              },
-              child: const Text('to lower house election screen'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (page == 'LowerHouse') {
+                if (page == 'lower_house') {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LowerHouse()),
                   );
-                } else if (page == 'UpperHouse') {
+                } else if (page == 'upper_house') {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => LowerHouse()),

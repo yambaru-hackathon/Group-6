@@ -71,7 +71,7 @@ class UserIdScope extends ConsumerWidget {
       return ProviderScope(
         // ユーザーIDを上書き
         overrides: [
-          userIdProvider.overrideWithValue(user.email!),
+          userIdProvider.overrideWithValue(user.uid),
         ],
         child: child,
       );
