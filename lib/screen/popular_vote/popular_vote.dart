@@ -1,216 +1,218 @@
-//import 'dart:math';
-
+//import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+import '../../components/app_bar.dart';
+import 'voter_selection.dart';
 
 class PopularVote extends StatefulWidget {
-  const PopularVote({Key? key}) : super(key: key);
+  const PopularVote({super.key});
 
   @override
-  State<PopularVote> createState() => _PopularVoteState();
+  State<PopularVote> createState() => _ElectionListState();
 }
 
-class _PopularVoteState extends State<PopularVote> {
-  bool isRunning = false; //ボタンの時に変化する用
-  int popularVotePoint = 5; //今から投票するポイント
-  final int popularVoteCurrentPoint = 50; //持っているポイント
+class ListGenerator {
+  static Map<String, dynamic> generateList(int i) {
+    Map<String, dynamic> map = {};
 
-  //int _counter = 0;
+    i == 0
+        ? map['page'] = 'LooksLikeCatOwner'
+        : i == 1
+            ? map['page'] = 'LooksLikeSleepFast'
+            : map['page'] = 'WantSomeoneBecomeParent';
 
-  //void _incrementCounter() {
-  //  setState(() {
-  //    _counter++;
-  //  });
-  //}
+    i == 0
+        ? map['id'] = '猫を飼ってそうな人'
+        : i == 1
+            ? map['id'] = '眠りに入るのがはやそうな人'
+            : map['id'] = '親にしたい人';
+    map['year'] = '$i';
+    map['date'] = '$i';
+    return map;
+  }
+}
 
-  void toggleSwitch() {
-    setState(() {
-      isRunning = !isRunning;
-    });
+class TwoDimensionalListGenerator {
+  List<Map<String, dynamic>> generateTwoDimensionalList(int rows) {
+    List<Map<String, dynamic>> twoDList = [];
+    for (int j = 0; j < rows; j++) {
+      Map<String, dynamic> sampleList = {'order': j};
+      sampleList.addAll(ListGenerator.generateList(j));
+      twoDList.add(sampleList);
+    }
+    return twoDList;
+  }
+}
+
+class _ElectionListState extends State<PopularVote> {
+  final _controller = FixedExtentScrollController(initialItem: 0);
+  String page = 'test';
+  String id = '人気投票';
+
+  final List<Map<String, dynamic>> _electionList =
+      TwoDimensionalListGenerator().generateTwoDimensionalList(3);
+
+  //そこに飛ぶ
+  void _scroll(position) {
+    _controller.animateToItem(position,
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
-  void changePoint(value) {
-    setState(() {
-      value ? popularVotePoint-- : popularVotePoint++;
-    });
-  }
-
+  int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
-    double sangle = (180 / 100 * popularVoteCurrentPoint) + 180;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sleek Circular Slider Example'),
-      ),
-      body:
-          //政治家・入力分割
-          Container(
+      appBar: myAppBar(context, '選挙を選ぶ'),
+      body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            //政治家Widgetを書き込む
-            Container(
-              height: MediaQuery.of(context).size.height - 400,
-              color: Colors.green,
-            ),
-            //＋ー・円スライダー分割
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.yellow),
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                //＋ーと円スライダー
-                children: [
-                  //+-
-//                  Positioned(
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                      children: <Widget>[
-//                        FloatingActionButton(
-//                          onPressed: () {
-//                            changePoint(true);
-//                          },
-//                          child: const Icon(Icons.remove),
-//                        ),
-//                        Text('$popularVotePoint'),
-//                        FloatingActionButton(
-//                          onPressed: () {
-//                            changePoint(false);
-//                          },
-//                          child: const Icon(Icons.add),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-                  Positioned(
-                    bottom: -120,
-                    child: SleekCircularSlider(
-                      key: Key(popularVotePoint.toString()),
-                      appearance: CircularSliderAppearance(
-                        size: 260,
-                        startAngle: sangle,
-                        angleRange: sangle - 180,
-                        animationEnabled: false,
-                        infoProperties: InfoProperties(
-                          topLabelText: popularVotePoint.toString(),
-                          mainLabelStyle: null,
-                        ),
-                        customWidths: CustomSliderWidths(
-                          trackWidth: 3,
-                          progressBarWidth: 5,
-                          handlerSize: 0,
-                        ),
-                        customColors: CustomSliderColors(
-                            trackColor: Color.fromARGB(255, 0, 30, 36),
-                            hideShadow: true,
-                            progressBarColors: [
-                              Color.fromARGB(255, 18, 123, 114),
-                              Color.fromARGB(255, 40, 97, 147)
-                            ]),
-                      ),
-                      min: 0,
-                      max: 100 - popularVoteCurrentPoint * 1.0,
-                      initialValue: popularVotePoint.toDouble(),
-                      onChange: (double value) {
-                        setState(() {
-                          popularVotePoint = value.round();
-                        });
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -120,
-                    child: SleekCircularSlider(
-                      appearance: CircularSliderAppearance(
-                        size: 260,
-                        startAngle: 180,
-                        angleRange: 180,
-                        customWidths: CustomSliderWidths(
-                          trackWidth: 10,
-                          progressBarWidth: 5,
-                          handlerSize: 0,
-                        ),
-                        customColors: CustomSliderColors(
-                            trackColor: const Color.fromARGB(0, 255, 255, 255),
-                            hideShadow: true,
-                            progressBarColors: [
-                              Colors.red,
-                              Color.fromARGB(255, 221, 0, 255)
-                            ]),
-                      ),
-                      min: 0,
-                      max: 100,
-                      initialValue: 100 - popularVoteCurrentPoint * 1.0,
-                      innerWidget: (double value) {
-                        return Text(
-                          popularVoteCurrentPoint.toString(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 10,
+        color: Color.fromARGB(255, 255, 255, 255),
+        child: ClipRect(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              SizedBox(
+                height: 400,
+                child: ListWheelScrollView(
+                  controller: _controller,
+                  diameterRatio: 50, //リストの間の幅
+                  itemExtent: 150, //リストの幅
+//                overAndUnderCenterOpacity: 0.5, //透明度
+                  perspective: 0.0001, //まるみ
+                  useMagnifier: false, //拡大するか否か
+                  magnification: 1, //拡大のどあい
+                  physics: FixedExtentScrollPhysics(),
+                  onSelectedItemChanged: (int index) {
+                    // update the UI on selected item changes
+                    setState(() {
+                      _selectedItemIndex = index;
+                      page = _electionList[index]['page'];
+                      id = _electionList[index]['id'];
+                    });
+                  },
+                  children: [
+                    for (var map in _electionList)
+                      Container(
+                        width: _selectedItemIndex == map['order'] ? 300 : 200,
+                        height: 300,
+                        child: Card(
+                          shadowColor: Colors.black,
+                          elevation:
+                              _selectedItemIndex == map['order'] ? 30 : 0,
+                          margin: _selectedItemIndex < map['order']
+                              ? const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 30,
+                                )
+                              : _selectedItemIndex > map['order']
+                                  ? EdgeInsets.only(
+                                      top: 30,
+                                      bottom: 10,
+                                    )
+                                  : EdgeInsets.all(0),
+                          color: _selectedItemIndex == map['order']
+                              ? Color.fromARGB(255, 165, 233, 211)
+                              : _selectedItemIndex + 1 == map['order'] ||
+                                      _selectedItemIndex - 1 == map['order']
+                                  ? Colors.white
+                                  : Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              color: _selectedItemIndex + 1 == map['order'] ||
+                                      _selectedItemIndex - 1 == map['order']
+                                  ? Color.fromARGB(255, 137, 198, 179)
+                                  : Colors.transparent, //色
+                              width: 4, //太さ
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                              // BorderRadius.only(
+//                            topLeft: _selectedItemIndex < map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            topRight: _selectedItemIndex < map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            bottomLeft: _selectedItemIndex > map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+//                            bottomRight: _selectedItemIndex > map['order']
+//                                ? Radius.zero
+//                                : Radius.circular(10),
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: -140,
-                    child: SleekCircularSlider(
-                      appearance: CircularSliderAppearance(
-                        size: 300,
-                        startAngle: 180,
-                        angleRange: 180,
-                        customWidths: CustomSliderWidths(
-                          trackWidth: 10,
-                          progressBarWidth: 10,
-                          handlerSize: 9,
-                        ),
-                        customColors: CustomSliderColors(
-                          trackColor: Color.fromARGB(255, 103, 139, 145),
-                          progressBarColors: [
-                            Color.fromARGB(255, 86, 255, 241),
-                            Color.fromARGB(255, 84, 229, 255),
-                          ],
-                          dotColor: Colors.yellow,
-                        ),
-                        infoProperties:
-                            InfoProperties(bottomLabelText: "aiueo"),
-                      ),
-                      min: 0,
-                      max: popularVoteCurrentPoint * 1.0,
-                      initialValue: 0,
-                      onChange: (double value) {
-                        setState(() {
-                          popularVotePoint = value.round();
-                          print(popularVotePoint);
-                        });
-                      },
-                      onChangeStart: (double startValue) {
-                        // パンジェスチャーが開始されたときに始まる値を提供するコールバック
-                      },
-                      onChangeEnd: (double endValue) {
-                        // パンジェスチャーが終了したときに終了する値を提供するコールバック
-                      },
-                      innerWidget: (double value) {
-                        // スライダー内部にカスタムウィジェットを使用する（コールバックからスライダーの値を取得）
-                        return Text(
-                          value.round().toString(),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
+                          child: InkWell(
+                            splashColor:
+                                const Color.fromARGB(255, 148, 207, 255)
+                                    .withAlpha(30),
+                            onTap: () {
+                              setState(() {
+                                _selectedItemIndex = map['order'];
+                                _scroll(map['order']);
+                                page = map['page'];
+                                id = map['id'];
+                              });
+                              debugPrint('Card taped');
+                            },
+                            child: Center(
+                              child: Text(
+                                _selectedItemIndex == map['order']
+                                    ? (map['id']) +
+                                        '\nランキング\n' +
+                                        (map['year']).toString() +
+                                        '/' +
+                                        (map['date']).toString()
+                                    : (map['id']),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        );
-                      },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: SizedBox(
+                  width: 200,
+                  height: 70,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                voterSelection(id: id, page: page)),
+                      );
+                    },
+                    child: RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '人気投票',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 85, 142, 124),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: 'へGO!',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 137, 198, 179),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
