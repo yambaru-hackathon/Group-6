@@ -7,6 +7,10 @@ import 'package:happyhappyhappy/provider/auth_service.dart';
 import '../../provider/auth_state.dart';
 import '../../components/app_bar.dart';
 
+//firestoreCollections
+final politicians = FirebaseFirestore.instance.collection('politician');
+final users = FirebaseFirestore.instance.collection('users');
+
 class LowerHouse extends ConsumerStatefulWidget {
   const LowerHouse({super.key});
 
@@ -18,9 +22,6 @@ class Completed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
       body: Center(
         child: Container(
           child: Text(
@@ -32,14 +33,51 @@ class Completed extends StatelessWidget {
   }
 }
 
-class ConfirmVotingPage extends StatelessWidget {
-  const ConfirmVotingPage({super.key});
+class ConfirmVotingPage extends ConsumerStatefulWidget {
+  String politicianName;
+
+  ConfirmVotingPage(this.politicianName);
+
+  @override
+  ConsumerState<ConfirmVotingPage> createState() => ConfirmVotingPageState();
+}
+
+class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
+  Future<void> onPressVotingButton(BuildContext context) async {
+    // 投票処理
+    // 選択した政治家のidを取得
+    final selectedPoliticianSnapshot = await politicians
+        .where('name', isEqualTo: widget.politicianName)
+        .get();
+    final selectedPoliticianId = selectedPoliticianSnapshot.docs[0].id;
+
+    // ユーザーの選択した政治家のidを更新
+    final uid = ref.read(userIdProvider);
+    debugPrint(selectedPoliticianId);
+    await users.doc(uid).update({
+      'lowerHouseVote': selectedPoliticianId,
+    });
+
+    // 投票数を更新
+    await updateVotes(selectedPoliticianSnapshot);
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => Completed(),
+    ));
+  }
+  
+  // 得票数の更新の通信を行う
+  Future<void> updateVotes(QuerySnapshot<Map<String, dynamic>> politicianSnapshot) async {
+    await politicians.doc(politicianSnapshot.docs[0].id).update({
+      'votes': ++politicianSnapshot.docs[0].data()['votes'],
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('next page'),
+        title: Text('投票します'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +106,7 @@ class ConfirmVotingPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Texttttttttttttttt',
+                    widget.politicianName,
                     style: TextStyle(fontSize: 16.0),
                   ),
                   Container(
@@ -100,10 +138,7 @@ class ConfirmVotingPage extends StatelessWidget {
           SizedBox(height: 20), // テキストとボタンの間隔
           ElevatedButton(
             onPressed: () {
-              //print('投票完了');
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Completed(),
-              ));
+              onPressVotingButton(context);
             },
             child: Text('投票する'),
           ),
@@ -135,11 +170,6 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
 }
 
 class _LowerHouseState extends ConsumerState<LowerHouse> {
-  final politicians = FirebaseFirestore.
-                        instance.collection('politician');
-  final users = FirebaseFirestore.instance.
-                        collection('users');
-  
   String userPrefecture = '';
   String userSenkyokuNum = '';
 
@@ -154,13 +184,14 @@ class _LowerHouseState extends ConsumerState<LowerHouse> {
 
   Future<void> _getPoliticians() async {
     await _getUserData();
-    final snapshot = await politicians.where('prefecture', isEqualTo: userPrefecture)
-                                      .where('senkyokuNum', isEqualTo: userSenkyokuNum)
-                                      .get();
+    final snapshot = await politicians
+        .where('prefecture', isEqualTo: userPrefecture)
+        .where('senkyokuNum', isEqualTo: userSenkyokuNum)
+        .get();
     setState(() {
       politiciansList = snapshot.docs.map((doc) => doc.data()).toList();
-    });                                  
-  
+    });
+
     debugPrint(snapshot.docs.map((doc) => doc.data()).toString());
   }
 
@@ -179,7 +210,7 @@ class _LowerHouseState extends ConsumerState<LowerHouse> {
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ConfirmVotingPage(),
+                builder: (context) => ConfirmVotingPage(politiciansList[i]['name']),
               ));
             },
             child: Container(
