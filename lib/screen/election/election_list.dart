@@ -341,7 +341,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     final user = await users.doc(ref.read(userIdProvider)).get();
     final String myNumber = user['myNumber'];
 
-    if (page == 'lower_house' || myNumber.isNotEmpty) {
+    if (page == 'lower_house' && myNumber.isNotEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LowerHouse()),
