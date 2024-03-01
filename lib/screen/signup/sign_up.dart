@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import '../../provider/auth_service.dart';
-import '../App.dart';
 import 'enter_personal_data.dart';
 
 class SignUp extends StatefulWidget {
@@ -79,7 +77,7 @@ class _SignUpState extends State<SignUp> {
           'senkyokuNum': ''
         });
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: false,)));
+            MaterialPageRoute(builder: (context) => const EnterPersonalData(isInitText: true, isFromAppScreen: false,)));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'email-already-in-use') {
           print('指定したメールアドレスは登録済みです');
@@ -133,7 +131,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 239, 239, 239),
+        color: const Color.fromARGB(255, 239, 239, 239),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -144,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.10,
                 ),
-                Container(
+                SizedBox(
                   height: 150,
                   width: 150,
 //                  decoration: BoxDecoration(
@@ -239,7 +237,7 @@ class _SignUpState extends State<SignUp> {
                               TextFormField(
                                 decoration: InputDecoration(
                                   labelText: 'email Again',
-                                  border: OutlineInputBorder(),
+                                  border: const OutlineInputBorder(),
                                   errorText: emailMismatch
                                       ? 'email do not match'
                                       : null,
@@ -269,8 +267,8 @@ class _SignUpState extends State<SignUp> {
                                 },
                               ),
                               Visibility(
-                                child: Text('Please @ add'),
-                                visible: email_Wrongformat, // ここで隠すか表示するかを選択する
+                                visible: email_Wrongformat,
+                                child: const Text('Please @ add'), // ここで隠すか表示するかを選択する
                               ),
 
                               const SizedBox(height: 16.0),
@@ -343,8 +341,8 @@ class _SignUpState extends State<SignUp> {
                                 },
                               ),
                               Visibility(
-                                child: Text('Please 6 or more characters'),
-                                visible: pass_Wrongformat, // ここで隠すか表示するかを選択する
+                                visible: pass_Wrongformat,
+                                child: const Text('Please 6 or more characters'), // ここで隠すか表示するかを選択する
                               ),
                             ],
                           ),
@@ -357,7 +355,7 @@ class _SignUpState extends State<SignUp> {
                                 const Color.fromARGB(255, 255, 255, 255),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(0)),
-                            fixedSize: Size(120, 25),
+                            fixedSize: const Size(120, 25),
                             side: const BorderSide(
                               color: Color.fromARGB(255, 187, 187, 187), //色
                               width: 2, //太さ

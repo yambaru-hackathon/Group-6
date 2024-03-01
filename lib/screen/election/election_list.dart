@@ -67,7 +67,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   //そこに飛ぶ
   void _scroll(position) {
     _controller.animateToItem(position,
-        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
   Future<void> _fetchData() async {
@@ -111,7 +111,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: ClipRect(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -127,7 +127,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                     perspective: 0.0001, //まるみ
                     useMagnifier: false, //拡大するか否か
                     magnification: 1, //拡大のどあい
-                    physics: FixedExtentScrollPhysics(),
+                    physics: const FixedExtentScrollPhysics(),
                     onSelectedItemChanged: (int index) {
                       // update the UI on selected item changes
                       setState(() {
@@ -137,7 +137,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                     },
                     children: [
                       for (var map in _electionList)
-                        Container(
+                        SizedBox(
                           width: _selectedItemIndex == map['order'] ? 300 : 200,
                           height: 300,
                           child: Card(
@@ -150,13 +150,13 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                                     bottom: 30,
                                   )
                                 : _selectedItemIndex > map['order']
-                                    ? EdgeInsets.only(
+                                    ? const EdgeInsets.only(
                                         top: 30,
                                         bottom: 10,
                                       )
-                                    : EdgeInsets.all(0),
+                                    : const EdgeInsets.all(0),
                             color: _selectedItemIndex == map['order']
-                                ? Color.fromARGB(255, 133, 149, 255)
+                                ? const Color.fromARGB(255, 133, 149, 255)
                                 : _selectedItemIndex + 1 == map['order'] ||
                                         _selectedItemIndex - 1 == map['order']
                                     ? Colors.white
@@ -165,11 +165,11 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                               side: BorderSide(
                                 color: _selectedItemIndex + 1 == map['order'] ||
                                         _selectedItemIndex - 1 == map['order']
-                                    ? Color.fromARGB(255, 112, 129, 245)
+                                    ? const Color.fromARGB(255, 112, 129, 245)
                                     : Colors.transparent, //色
                                 width: 4, //太さ
                               ),
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
                               ),
                             ),
@@ -192,7 +192,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                                           '\n' +
                                           (map['date']).toString()
                                       : (map['id']),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                   ),
                                 ),
@@ -205,7 +205,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                 ),
 
                 // 選挙リストがない場合、選挙リストがないことを表示
-                _electionList.length == 0
+                _electionList.isEmpty
                     ? SizedBox(
                         height: 400,
                         child: ListWheelScrollView(
@@ -216,7 +216,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                           perspective: 0.0001, //まるみ
                           useMagnifier: false, //拡大するか否か
                           magnification: 1, //拡大のどあい
-                          physics: FixedExtentScrollPhysics(),
+                          physics: const FixedExtentScrollPhysics(),
                           onSelectedItemChanged: (int index) {
                             // update the UI on selected item changes
                             setState(() {
@@ -224,7 +224,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                             });
                           },
                           children: [
-                            Container(
+                            SizedBox(
                               width: 500,
                               height: 300,
                               child: Card(
@@ -234,8 +234,8 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                                   right: 60,
                                   left: 60,
                                 ),
-                                color: Color.fromARGB(255, 112, 129, 245),
-                                shape: RoundedRectangleBorder(
+                                color: const Color.fromARGB(255, 112, 129, 245),
+                                shape: const RoundedRectangleBorder(
                                   side: BorderSide(
                                     color: Color.fromARGB(255, 112, 129, 245),
                                     width: 2, //太さ
@@ -251,7 +251,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                                   onTap: () {
                                     debugPrint('Card taped');
                                   },
-                                  child: Center(
+                                  child: const Center(
                                     child: Text(
                                       'Coming soon',
                                       style: TextStyle(
@@ -265,7 +265,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                           ],
                         ),
                       )
-                    : SizedBox(), // 選挙リストがある場合何も表示しない
+                    : const SizedBox(), // 選挙リストがある場合何も表示しない
               ]),
               Container(
                 padding: const EdgeInsets.all(10),
@@ -302,7 +302,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
               if (userMyNumber.isEmpty)
                 Column(
                   children: [
-                    Text(
+                    const Text(
                       'マイナンバーが登録されていないので投票できません',
                       style: TextStyle(
                         fontSize: 13,
@@ -314,14 +314,14 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EnterPersonalData(
+                              builder: (context) => const EnterPersonalData(
                                     isInitText: true,
                                     isFromAppScreen: true,
                                   )),
                           (route) => false,
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'マイナンバーを登録する',
                         style: TextStyle(
                           fontSize: 13,
@@ -342,18 +342,21 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   }
 
   Future<void> onPressedToVoting() async {
+    EasyLoading.show(status: 'loading...');
     final user = await users.doc(ref.read(userIdProvider)).get();
     final String myNumber = user['myNumber'];
 
+    debugPrint(page + myNumber + user['prefecture']);
     if (page == 'lower_house' &&
         myNumber.isNotEmpty &&
         user['prefecture'] != 'エラー') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LowerHouse()),
+        MaterialPageRoute(builder: (context) => const LowerHouse()),
       );
     } else {
       // マイナンバーが登録されていない場合、登録画面に遷移
     }
+    EasyLoading.dismiss();
   }
 }

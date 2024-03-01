@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       home: const SignIn(),
       builder: (BuildContext context, Widget? child) {
         EasyLoading.instance
-          ..maskType = EasyLoadingMaskType.black;
+          .maskType = EasyLoadingMaskType.black;
         return FlutterEasyLoading(
           child: child,
         );

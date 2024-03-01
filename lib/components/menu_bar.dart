@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../provider/auth_service.dart';
 
 class MyMenuBar extends StatefulWidget {
-  MyMenuBar({super.key});
+  const MyMenuBar({super.key});
 
   @override
   State<MyMenuBar> createState() => _MyMenuBarState();
@@ -90,18 +90,18 @@ class _MyMenuBarState extends State<MyMenuBar> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 0,
                   width: 300,
                 ),
-                Text('選挙区',
+                const Text('選挙区',
                     style: TextStyle(
                       fontSize: 20,
                     )),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text('比例区  $hireiDistrictTextブロック',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       )),
@@ -109,7 +109,7 @@ class _MyMenuBarState extends State<MyMenuBar> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text('小選挙区  $electoralDistrictText',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       )),

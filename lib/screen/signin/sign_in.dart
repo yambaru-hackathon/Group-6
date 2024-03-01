@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import '../../provider/auth_service.dart';
 import '../App.dart';
 import '../signup/sign_up.dart';
@@ -44,7 +43,7 @@ class _SignInState extends State<SignIn> {
 
   // 入力の表示非表示
   bool _isObscure = true;
-  bool _isObscureAgain = true;
+  final bool _isObscureAgain = true;
 
   Future<void> _submit() async {
     // バリデートして問題なければ実行
@@ -99,7 +98,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 239, 239, 239),
+        color: const Color.fromARGB(255, 239, 239, 239),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -109,7 +108,7 @@ class _SignInState extends State<SignIn> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.10,
                 ),
-                Container(
+                SizedBox(
                   height: 150,
                   width: 150,
 //                  decoration: BoxDecoration(
@@ -232,11 +231,11 @@ class _SignInState extends State<SignIn> {
                               onPressed: _submit,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Color.fromARGB(255, 129, 129, 129),
+                                    const Color.fromARGB(255, 129, 129, 129),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(200)),
-                                fixedSize: Size(150, 150),
-                                side: BorderSide(
+                                fixedSize: const Size(150, 150),
+                                side: const BorderSide(
                                   color: Color.fromARGB(255, 187, 187, 187), //色
                                   width: 5, //太さ
                                 ),
@@ -256,14 +255,14 @@ class _SignInState extends State<SignIn> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUp()));
+                                        builder: (context) => const SignUp()));
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(0)),
-                                fixedSize: Size(120, 25),
-                                side: BorderSide(
+                                fixedSize: const Size(120, 25),
+                                side: const BorderSide(
                                   color: Color.fromARGB(255, 187, 187, 187), //色
                                   width: 2, //太さ
                                 ),

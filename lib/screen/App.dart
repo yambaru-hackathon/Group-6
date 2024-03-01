@@ -67,9 +67,9 @@ class _AppScreenState extends ConsumerState<AppScreen> {
                 return NestedNavigator(
                   navigatorKey: navigatorKeys[index],
                   builder: (context) => [
-                    ElectionList(),
-                    PopularVote(),
-                    Timeline(),
+                    const ElectionList(),
+                    const PopularVote(),
+                    const Timeline(),
                   ][index],
                 );
               },
@@ -82,7 +82,7 @@ class _AppScreenState extends ConsumerState<AppScreen> {
               surfaceTintColor: Colors.black12,
               shadowColor: Colors.black,
             ),
-            endDrawer: MyMenuBar(),
+            endDrawer: const MyMenuBar(),
         ),
       ),
     );

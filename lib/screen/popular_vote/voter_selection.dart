@@ -46,7 +46,7 @@ class _PopularVoteState extends State<VoterSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(context, '$id'),
+      appBar: myAppBar(context, id),
       body:
           //政治家・入力分割
           Column(
@@ -89,9 +89,9 @@ class _PopularVoteState extends State<VoterSelection> {
                 handlerSize: 0,
               ),
               customColors: CustomSliderColors(
-                trackColor: Color.fromARGB(255, 103, 139, 145),
+                trackColor: const Color.fromARGB(255, 103, 139, 145),
                 hideShadow: true,
-                progressBarColor: Color.fromARGB(255, 137, 198, 179),
+                progressBarColor: const Color.fromARGB(255, 137, 198, 179),
               ),
             ),
             min: 0,
@@ -102,33 +102,33 @@ class _PopularVoteState extends State<VoterSelection> {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       bottom: 43.0,
                       left: 180,
                     ),
-                    child: Text(
+                    child: const Text(
                       '/100',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       bottom: 200.0,
                       left: 0,
                     ),
-                    child: Text(
+                    child: const Text(
                       '残り',
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
                   Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(bottom: 100.0),
+                    padding: const EdgeInsets.only(bottom: 100.0),
                     child: Text(
                       popularVoteCurrentPoint.round().toString(),
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 89, 191, 184),
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 89, 191, 184),
                         fontSize: 90,
                       ),
                     ),
@@ -160,36 +160,36 @@ class _PopularVoteState extends State<VoterSelection> {
                 },
                 child: Row(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Container(
-                      padding: EdgeInsets.all(3.0),
+                      padding: const EdgeInsets.all(3.0),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Color.fromARGB(255, 183, 230, 215),
+                          color: const Color.fromARGB(255, 183, 230, 215),
                           width: 2,
                         ),
                       ),
-                      child: CircleAvatar(
+                      child: const CircleAvatar(
                         radius: 36.0,
                         backgroundImage:
                             AssetImage('assets/images/politician_img.png'),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 50,
                           ),
-                          Text(
+                          const Text(
                             'Texttttttttttttttt',
                             style: TextStyle(fontSize: 16.0),
                           ),
                           Container(
                             width: 150,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
                                   color: Color.fromARGB(255, 137, 198, 179),

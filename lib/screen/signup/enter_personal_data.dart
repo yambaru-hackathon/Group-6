@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,7 +19,7 @@ final ProfileData _data = ProfileData();
 var myNumberController = TextEditingController();
 var postcodeController = TextEditingController();
 bool isSaveText = false;
-final isAllowedUsingCamera = false;
+const isAllowedUsingCamera = false;
 
 enum CameraPermissionStatus {
   granted,
@@ -165,7 +162,7 @@ class DisplayPictureScreen extends StatelessWidget {
                 height: 50,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Color.fromARGB(255, 137, 198, 179),
+                    color: const Color.fromARGB(255, 137, 198, 179),
                     width: 3,
                   ),
                   borderRadius: BorderRadius.circular(45),
@@ -175,7 +172,7 @@ class DisplayPictureScreen extends StatelessWidget {
                     int count = 0;
                     Navigator.popUntil(context, (_) => count++ >= 2);
                   },
-                  child: Text(
+                  child: const Text(
                     '完了!',
                     style: TextStyle(
                       fontSize: 18,
@@ -197,7 +194,7 @@ class EnterPersonalData extends StatefulWidget {
   final bool isInitText;
   final bool isFromAppScreen;
   const EnterPersonalData(
-      {required this.isInitText, required this.isFromAppScreen});
+      {super.key, required this.isInitText, required this.isFromAppScreen});
 
   @override
   State<EnterPersonalData> createState() => EnterPersonalDataState();
@@ -334,14 +331,14 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(
+            const Center(
               child: Text(
                 '投票を行うには、本人認証が必要です。\n今はスキップして、あとで行うこともできます。\nこれらの情報はあとから変更することができません。',
                 style: TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             // 情報入力フィールド
             Container(
               child: Form(
@@ -398,14 +395,14 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
             ),
             // カメラ
             Container(
-              padding: EdgeInsets.only(bottom: 24),
+              padding: const EdgeInsets.only(bottom: 24),
               child: Column(
                 children: [
                   GestureDetector(
                     //this
                     onTap: () async {
                       print('tapped');
-                      isSaveText = await true;
+                      isSaveText = true;
                       /*Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => TakePictureScreen()), // カメラ情報を渡す
@@ -417,12 +414,12 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                       height: 150,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color.fromARGB(255, 146, 146, 146),
+                          color: const Color.fromARGB(255, 146, 146, 146),
                           width: 1,
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.camera_alt_rounded,
                           size: 36,
@@ -435,13 +432,13 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
               ),
             ),
             isAllowedUsingCamera ? 
-              SizedBox(height: 0, width: 0) : Text('カメラの使用が許可されていません。', style: TextStyle(color: Colors.red),),
-            SizedBox(height: 20),
+              const SizedBox(height: 0, width: 0) : const Text('カメラの使用が許可されていません。', style: TextStyle(color: Colors.red),),
+            const SizedBox(height: 20),
             // 登録ボタン
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromARGB(255, 137, 198, 179),
+                  color: const Color.fromARGB(255, 137, 198, 179),
                   width: 3,
                 ),
                 borderRadius: BorderRadius.circular(45),
@@ -459,16 +456,16 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ElectionList()));
+                                builder: (context) => const ElectionList()));
                       } else {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AppScreen()),
+                          MaterialPageRoute(builder: (context) => const AppScreen()),
                         );
                       }
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     '登録完了',
                     style: TextStyle(
                       fontSize: 20,
@@ -478,11 +475,11 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Color.fromARGB(255, 137, 198, 179),
+                  color: const Color.fromARGB(255, 137, 198, 179),
                   width: 3,
                 ),
                 borderRadius: BorderRadius.circular(3),
@@ -496,15 +493,15 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ElectionList()));
+                              builder: (context) => const ElectionList()));
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AppScreen()),
+                        MaterialPageRoute(builder: (context) => const AppScreen()),
                       );
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     'あとで',
                     style: TextStyle(
                       fontSize: 15,

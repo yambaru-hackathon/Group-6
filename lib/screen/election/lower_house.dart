@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:happyhappyhappy/provider/auth_service.dart';
 
 // local
 import '../../provider/auth_state.dart';
@@ -19,12 +18,14 @@ class LowerHouse extends ConsumerStatefulWidget {
 }
 
 class Completed extends StatelessWidget {
+  const Completed({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Container(
-          child: Text(
+          child: const Text(
             '投票ありがとうございました',
           ),
         ),
@@ -36,7 +37,7 @@ class Completed extends StatelessWidget {
 class ConfirmVotingPage extends ConsumerStatefulWidget {
   String politicianName;
 
-  ConfirmVotingPage(this.politicianName);
+  ConfirmVotingPage(this.politicianName, {super.key});
 
   @override
   ConsumerState<ConfirmVotingPage> createState() => ConfirmVotingPageState();
@@ -62,7 +63,7 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
     await updateVotes(selectedPoliticianSnapshot);
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => Completed(),
+      builder: (context) => const Completed(),
     ));
   }
   
@@ -77,7 +78,7 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('投票します'),
+        title: const Text('投票します'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,33 +86,33 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Container(
-                padding: EdgeInsets.all(3.0),
+                padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Color.fromARGB(255, 137, 198, 179),
+                    color: const Color.fromARGB(255, 137, 198, 179),
                     width: 3,
                   ),
                 ),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 36.0,
                   backgroundImage:
                       AssetImage('assets/images/politician_img.png'),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.politicianName,
-                    style: TextStyle(fontSize: 16.0),
+                    style: const TextStyle(fontSize: 16.0),
                   ),
                   Container(
                     width: 150,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
                           color: Color.fromARGB(255, 137, 198, 179),
@@ -120,12 +121,12 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'よろしいですか？',
                     style: TextStyle(fontSize: 12),
                   ),
-                  Text(
+                  const Text(
                     '変更、再投票はできません',
                     style: TextStyle(
                       fontSize: 8,
@@ -135,12 +136,12 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
               ),
             ],
           ),
-          SizedBox(height: 20), // テキストとボタンの間隔
+          const SizedBox(height: 20), // テキストとボタンの間隔
           ElevatedButton(
             onPressed: () {
               onPressVotingButton(context);
             },
-            child: Text('投票する'),
+            child: const Text('投票する'),
           ),
         ],
       ),
@@ -149,6 +150,8 @@ class ConfirmVotingPageState extends ConsumerState<ConfirmVotingPage> {
 }
 
 class CheckboxWidget extends StatefulWidget {
+  const CheckboxWidget({super.key});
+
   @override
   _CheckboxWidgetState createState() => _CheckboxWidgetState();
 }
@@ -214,39 +217,39 @@ class _LowerHouseState extends ConsumerState<LowerHouse> {
               ));
             },
             child: Container(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Container(
-                    padding: EdgeInsets.all(3.0),
+                    padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Color.fromARGB(255, 183, 230, 215),
+                        color: const Color.fromARGB(255, 183, 230, 215),
                         width: 3,
                       ),
                     ),
-                    child: CircleAvatar(
+                    child: const CircleAvatar(
                       radius: 36.0,
                       backgroundImage:
                           AssetImage('assets/images/politician_img.png'),
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 50,
                         ),
                         Text(
                           politiciansList[i]['name'],
-                          style: TextStyle(fontSize: 16.0),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                         Container(
                           width: 150,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
                                 color: Color.fromARGB(255, 137, 198, 179),
@@ -258,9 +261,9 @@ class _LowerHouseState extends ConsumerState<LowerHouse> {
                       ],
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   //CheckBox(),
-                  Center(
+                  const Center(
                     child: CheckboxWidget(),
                   ),
                 ],

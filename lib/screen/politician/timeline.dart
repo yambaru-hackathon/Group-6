@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../politician/politician.dart';
 
 //local
-import '../../components/app_bar.dart';
 
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
@@ -25,11 +23,11 @@ class _TimelineState extends State<Timeline> {
     return Scaffold(
       appBar: AppBar(
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               '開発中です',
             ),
           ],

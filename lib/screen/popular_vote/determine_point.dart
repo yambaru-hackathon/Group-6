@@ -10,7 +10,7 @@ import '../../components/app_bar.dart';
 class Completed extends StatelessWidget {
   final int popularVotePoint;
 
-  Completed({Key? key, required this.popularVotePoint}) : super(key: key);
+  const Completed({Key? key, required this.popularVotePoint}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class Completed extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PopularVote()),
+                  MaterialPageRoute(builder: (context) => const PopularVote()),
                 );
               },
               child: const Text(
@@ -48,7 +48,7 @@ class Completed extends StatelessWidget {
 class ConfirmVotingPage extends StatefulWidget {
   final int popularVoteCurrentPoint;
 
-  ConfirmVotingPage({Key? key, required this.popularVoteCurrentPoint})
+  const ConfirmVotingPage({Key? key, required this.popularVoteCurrentPoint})
       : super(key: key);
 
   @override
@@ -74,14 +74,14 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
           Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             //政治家Widgetを書き込む
             Container(
               height: MediaQuery.of(context).size.height - 355,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
 //                color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.all(
                   Radius.circular(13),
@@ -107,33 +107,33 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Container(
-                padding: EdgeInsets.all(3.0),
+                padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Color.fromARGB(255, 137, 198, 179),
+                    color: const Color.fromARGB(255, 137, 198, 179),
                     width: 3,
                   ),
                 ),
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 36.0,
                   backgroundImage:
                       AssetImage('assets/images/politician_img.png'),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Texttttttttttttttt',
                     style: TextStyle(fontSize: 16.0),
                   ),
                   Container(
                     width: 150,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
                           color: Color.fromARGB(255, 137, 198, 179),
@@ -142,12 +142,12 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'よろしいですか？',
                     style: TextStyle(fontSize: 12),
                   ),
-                  Text(
+                  const Text(
                     '変更、再投票はできません',
                     style: TextStyle(
                       fontSize: 8,
@@ -157,7 +157,7 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
               ),
             ],
           ),
-          SizedBox(height: 90), // テキストとボタンの間隔
+          const SizedBox(height: 90), // テキストとボタンの間隔
           ElevatedButton(
             onPressed: popularVotePoint == 0
                 ? null
@@ -170,7 +170,7 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
                     ));
                   },
             style: TextButton.styleFrom(
-              fixedSize: Size(300, 100),
+              fixedSize: const Size(300, 100),
             ),
             child: RichText(
               textAlign: TextAlign.center,
@@ -244,9 +244,9 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
                 handlerSize: 0,
               ),
               customColors: CustomSliderColors(
-                trackColor: Color.fromARGB(255, 103, 139, 145),
+                trackColor: const Color.fromARGB(255, 103, 139, 145),
                 hideShadow: true,
-                progressBarColor: Color.fromARGB(255, 110, 160, 144),
+                progressBarColor: const Color.fromARGB(255, 110, 160, 144),
               ),
             ),
             min: 0,
@@ -273,9 +273,9 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
                 handlerSize: 0,
               ),
               customColors: CustomSliderColors(
-                trackColor: Color.fromARGB(255, 103, 139, 145),
+                trackColor: const Color.fromARGB(255, 103, 139, 145),
                 hideShadow: true,
-                progressBarColor: Color.fromARGB(255, 137, 198, 179),
+                progressBarColor: const Color.fromARGB(255, 137, 198, 179),
               ),
             ),
             min: 0,
@@ -289,13 +289,13 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
             innerWidget: (double value) {
               return Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   bottom: 43.0,
                   left: 180,
                 ),
                 child: Text(
-                  '/' + popularVoteCurrentPoint.round().toString(),
-                  style: TextStyle(fontSize: 20),
+                  '/${popularVoteCurrentPoint.round()}',
+                  style: const TextStyle(fontSize: 20),
                 ),
               );
             },
@@ -314,10 +314,10 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
                 handlerSize: 12,
               ),
               customColors: CustomSliderColors(
-                trackColor: Color.fromARGB(255, 103, 139, 145),
-                progressBarColor: Color.fromARGB(255, 89, 191, 184),
+                trackColor: const Color.fromARGB(255, 103, 139, 145),
+                progressBarColor: const Color.fromARGB(255, 89, 191, 184),
                 hideShadow: true,
-                dotColor: Color.fromARGB(255, 89, 191, 184),
+                dotColor: const Color.fromARGB(255, 89, 191, 184),
               ),
               infoProperties: InfoProperties(bottomLabelText: "aiueo"),
             ),
@@ -338,11 +338,11 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
             innerWidget: (double value) {
               return Container(
                 alignment: Alignment.center,
-                padding: EdgeInsets.only(bottom: 100.0),
+                padding: const EdgeInsets.only(bottom: 100.0),
                 child: Text(
                   popularVotePoint.round().toString(),
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 89, 191, 184),
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 89, 191, 184),
                     fontSize: 90,
                   ),
                 ),

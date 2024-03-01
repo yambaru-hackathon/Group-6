@@ -54,7 +54,7 @@ class _ElectionListState extends State<PopularVote> {
   //そこに飛ぶ
   void _scroll(position) {
     _controller.animateToItem(position,
-        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
   int _selectedItemIndex = 0;
@@ -65,7 +65,7 @@ class _ElectionListState extends State<PopularVote> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         child: ClipRect(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -80,7 +80,7 @@ class _ElectionListState extends State<PopularVote> {
                   perspective: 0.0001, //まるみ
                   useMagnifier: false, //拡大するか否か
                   magnification: 1, //拡大のどあい
-                  physics: FixedExtentScrollPhysics(),
+                  physics: const FixedExtentScrollPhysics(),
                   onSelectedItemChanged: (int index) {
                     // update the UI on selected item changes
                     setState(() {
@@ -91,7 +91,7 @@ class _ElectionListState extends State<PopularVote> {
                   },
                   children: [
                     for (var map in _electionList)
-                      Container(
+                      SizedBox(
                         width: _selectedItemIndex == map['order'] ? 300 : 200,
                         height: 300,
                         child: Card(
@@ -104,13 +104,13 @@ class _ElectionListState extends State<PopularVote> {
                                   bottom: 30,
                                 )
                               : _selectedItemIndex > map['order']
-                                  ? EdgeInsets.only(
+                                  ? const EdgeInsets.only(
                                       top: 30,
                                       bottom: 10,
                                     )
-                                  : EdgeInsets.all(0),
+                                  : const EdgeInsets.all(0),
                           color: _selectedItemIndex == map['order']
-                              ? Color.fromARGB(255, 165, 233, 211)
+                              ? const Color.fromARGB(255, 165, 233, 211)
                               : _selectedItemIndex + 1 == map['order'] ||
                                       _selectedItemIndex - 1 == map['order']
                                   ? Colors.white
@@ -119,11 +119,11 @@ class _ElectionListState extends State<PopularVote> {
                             side: BorderSide(
                               color: _selectedItemIndex + 1 == map['order'] ||
                                       _selectedItemIndex - 1 == map['order']
-                                  ? Color.fromARGB(255, 137, 198, 179)
+                                  ? const Color.fromARGB(255, 137, 198, 179)
                                   : Colors.transparent, //色
                               width: 4, //太さ
                             ),
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(10),
                               // BorderRadius.only(
 //                            topLeft: _selectedItemIndex < map['order']
@@ -162,7 +162,7 @@ class _ElectionListState extends State<PopularVote> {
                                         '/' +
                                         (map['date']).toString()
                                     : (map['id']),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                 ),
                                 textAlign: TextAlign.center,
@@ -175,7 +175,7 @@ class _ElectionListState extends State<PopularVote> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: SizedBox(
                   width: 200,
                   height: 70,
