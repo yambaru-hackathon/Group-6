@@ -103,14 +103,22 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     final uid = ref.read(userIdProvider);
     final userData = await users.doc(uid).get();
     final String lowerHouseVote = userData['lowerHouseVote'];
-
+    
+    setState(() {
       if (lowerHouseVote.isNotEmpty) {
         // debugPrint('vote history of user is fetched');
         _electionList
             .removeWhere((element) => element['id'] == lowerHouseData['name']);
       }
+    });
   }
 
+  @override
+  void didUpdateWidget(covariant ElectionList oldWidget) {
+    _fetchUser();
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
   @override
   void initState() {
     _fetchData();
@@ -120,7 +128,6 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   }
   @override
   Widget build(BuildContext context) {
-    _fetchData();
     _fetchUser();
     return Scaffold(
       appBar: myAppBar(context, '選挙を選ぶ'),
