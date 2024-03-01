@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sign_in.dart';
 import '../signup/sign_up.dart';
+import '../signup/enter_personal_data.dart';
 
 class StandBy extends StatefulWidget {
   const StandBy({super.key});
@@ -37,9 +38,9 @@ class _StandByState extends State<StandBy> {
             ElevatedButton(
               onPressed: () {Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SignUp())
+                MaterialPageRoute(builder: (context) => EnterPersonalData())
               );},
-              child: const Text('to sign up')),
+              child: const Text('マイナンバーページ開発用')),
           ],
         ),
       ),
