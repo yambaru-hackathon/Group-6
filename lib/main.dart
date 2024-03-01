@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screen/signin/standby.dart';
+import 'screen/signin/sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'NotoSansJP',
       ),
-      home: const StandBy(),
+      home: const SignIn(),
     );
   }
 }
