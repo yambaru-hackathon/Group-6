@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import '../../provider/auth_service.dart';
 import '../App.dart';
+import 'enter_personal_data.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -48,27 +49,6 @@ class _SignUpState extends State<SignUp> {
   
   bool email_Wrongformat = false;
   bool pass_Wrongformat = false;
-
-  Future<void> _test() async {
-      _formKey.currentState!.save();  
-      try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        // email: 'test@test.com',
-        // password: 'password',
-        email: _data.email,
-        password: _data.pass,
-      );
-      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-        'lowerHouseVote': '2',
-        'myNumber': '123456789012',
-        'postcode': '9010123',
-        'prefecture': '沖縄県',
-        'senkyokuNum': '999'
-      });
-      } catch (error) {
-      print('Error registering user: $error');
-    }
-  }
 
   Future<void> _submit() async {
     // バリデートして問題なければ実行
@@ -118,6 +98,10 @@ class _SignUpState extends State<SignUp> {
       } catch (e) {
         print(e);
       }
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EnterPersonalData())
+        );
     }
   }
   @override
