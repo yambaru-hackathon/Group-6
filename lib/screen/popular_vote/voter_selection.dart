@@ -10,8 +10,7 @@ import 'determine_point.dart';
 class VoterSelection extends StatefulWidget {
   final String id; // 表示用
 
-  const VoterSelection({Key? key, required this.id})
-      : super(key: key);
+  const VoterSelection({Key? key, required this.id}) : super(key: key);
 
   @override
   State<VoterSelection> createState() => _PopularVoteState(id: id);
@@ -47,7 +46,7 @@ class _PopularVoteState extends State<VoterSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(context, ''),
+      appBar: myAppBar(context, '$id'),
       body:
           //政治家・入力分割
           Expanded(
