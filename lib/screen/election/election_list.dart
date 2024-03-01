@@ -73,6 +73,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   }
 
   Future<void> _fetchData() async {
+    EasyLoading.show(status: 'loading...');
     // データベースから選挙情報を取得
     lowerHouseData = await electionData.doc('lowerHouse').get();
     upperHouseData = await electionData.doc('upperHouse').get();
@@ -94,6 +95,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
             .removeWhere((element) => element['id'] == lowerHouseData['name']);
       }
     });
+    EasyLoading.dismiss();
   }
 
   void _fetchUser() async {
