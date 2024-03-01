@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'popular_vote.dart';
 
+// local
+import '../../components/app_bar.dart';
+
 class Completed extends StatelessWidget {
   final int popularVotePoint;
 
@@ -12,9 +15,6 @@ class Completed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -68,9 +68,7 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sleek Circular Slider Example'),
-      ),
+      appBar: myAppBar(context, ''),
       body:
           //政治家・入力分割
           Container(
@@ -92,14 +90,7 @@ class _ConfirmVotingPageState extends State<ConfirmVotingPage> {
               child: voter(),
             ),
             //＋ー・円スライダー分割
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-//                border: Border.all(color: Colors.yellow),
-//                color: Color.fromARGB(255, 249, 249, 249),
-                  ),
-              width: MediaQuery.of(context).size.width,
-              height: 180,
+            Expanded(
               child: buildCircleSlider(),
             ),
           ],

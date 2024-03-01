@@ -2,27 +2,28 @@
 //import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
+
+//local
+import '../../components/app_bar.dart';
 import 'determine_point.dart';
 
-class voterSelection extends StatefulWidget {
+class VoterSelection extends StatefulWidget {
   final String id; // 表示用
-  final String page; //いつかデータベースに入れるとき用
 
-  const voterSelection({Key? key, required this.id, required this.page})
+  const VoterSelection({Key? key, required this.id})
       : super(key: key);
 
   @override
-  State<voterSelection> createState() => _PopularVoteState(id: id, page: page);
+  State<VoterSelection> createState() => _PopularVoteState(id: id);
 }
 
-class _PopularVoteState extends State<voterSelection> {
+class _PopularVoteState extends State<VoterSelection> {
   bool isRunning = false; //ボタンの時に変化する用
   int popularVotePoint = 0; //今から投票するポイント
   final int popularVoteCurrentPoint = 80; //持っているポイント
   final String id; // 表示用
-  final String page; //いつかデータベースに入れるとき用
 
-  _PopularVoteState({required this.id, required this.page});
+  _PopularVoteState({required this.id});
   //int _counter = 0;
 
   //void _incrementCounter() {
@@ -46,48 +47,18 @@ class _PopularVoteState extends State<voterSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('人気投票'),
-      ),
+      appBar: myAppBar(context, ''),
       body:
           //政治家・入力分割
-          Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: Color.fromARGB(255, 255, 255, 255),
+          Expanded(
         child: ClipRect(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Container(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: id,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 85, 142, 124),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const TextSpan(
-                        text: 'ランキング',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 137, 198, 179),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
               //政治家Widgetを書き込む
               Container(
                 height: MediaQuery.of(context).size.height - 355,
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.all(
                     Radius.circular(13),
                   ),
@@ -95,14 +66,7 @@ class _PopularVoteState extends State<voterSelection> {
                 child: buildLowersList(),
               ),
               //＋ー・円スライダー分割
-              Container(
-                padding: const EdgeInsets.all(5.0),
-                decoration: BoxDecoration(
-//                border: Border.all(color: Colors.yellow),
-                  color: Color.fromARGB(255, 255, 255, 255),
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 150,
+              Expanded(
                 child: buildCircleSlider(),
               ),
             ],
