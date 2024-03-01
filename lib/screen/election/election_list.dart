@@ -294,14 +294,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
             ]),
             ElevatedButton(
               onPressed: () {
-                if (page == 'lower_house') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LowerHouse()),
-                  );
-                } // else if (page == 'upper_house') {
-                //
-                //}
+                onPressedToVoting();
               },
               child: const Text('投票画面へGO!'),
             ),
@@ -309,5 +302,19 @@ class _ElectionListState extends ConsumerState<ElectionList> {
         ),
       ),
     );
+  }
+
+  Future<void> onPressedToVoting() async {
+    final user = await users.doc(ref.read(userIdProvider)).get();
+    final String myNumber = user['myNumber'];
+
+    if (page == 'lower_house' || myNumber.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LowerHouse()),
+      );
+    } else {
+      // マイナンバーが登録されていない場合、登録画面に遷移
+    }
   }
 }
