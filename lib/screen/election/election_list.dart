@@ -122,7 +122,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
         color: Color.fromARGB(255, 255, 255, 255),
         child: ClipRect(
           child: Column(
-          //          mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Stack(children: [
                 SizedBox(
@@ -146,32 +146,25 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                     children: [
                       for (var map in _electionList)
                         Container(
-                          width: 500,
+                          width: _selectedItemIndex == map['order'] ? 300 : 200,
                           height: 300,
                           child: Card(
                             shadowColor: Colors.black,
                             elevation:
                                 _selectedItemIndex == map['order'] ? 30 : 0,
-                            margin: _selectedItemIndex == map['order']
+                            margin: _selectedItemIndex < map['order']
                                 ? const EdgeInsets.only(
-                                    right: 60,
-                                    left: 60,
+                                    top: 10,
+                                    bottom: 30,
                                   )
-                                : _selectedItemIndex < map['order']
-                                    ? const EdgeInsets.only(
-                                        top: 10,
-                                        bottom: 30,
-                                        right: 90,
-                                        left: 90,
-                                      )
-                                    : const EdgeInsets.only(
+                                : _selectedItemIndex > map['order']
+                                    ? EdgeInsets.only(
                                         top: 30,
                                         bottom: 10,
-                                        right: 90,
-                                        left: 90,
-                                      ),
+                                      )
+                                    : EdgeInsets.all(0),
                             color: _selectedItemIndex == map['order']
-                                ? Color.fromARGB(255, 99, 112, 255)
+                                ? Color.fromARGB(255, 133, 149, 255)
                                 : _selectedItemIndex + 1 == map['order'] ||
                                         _selectedItemIndex - 1 == map['order']
                                     ? Colors.white
@@ -180,25 +173,12 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                               side: BorderSide(
                                 color: _selectedItemIndex + 1 == map['order'] ||
                                         _selectedItemIndex - 1 == map['order']
-                                    ? const Color.fromARGB(255, 50, 61, 180)
+                                    ? Color.fromARGB(255, 112, 129, 245)
                                     : Colors.transparent, //色
-                                width: 2, //太さ
+                                width: 4, //太さ
                               ),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10),
-                                // BorderRadius.only(
-                                //                            topLeft: _selectedItemIndex < map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            topRight: _selectedItemIndex < map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            bottomLeft: _selectedItemIndex > map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            bottomRight: _selectedItemIndex > map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
                               ),
                             ),
                             child: InkWell(
@@ -231,7 +211,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                     ],
                   ),
                 ),
-              
+
                 // 選挙リストがない場合、選挙リストがないことを表示
                 _electionList.length == 0
                     ? SizedBox(
@@ -262,10 +242,10 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                                   right: 60,
                                   left: 60,
                                 ),
-                                color: Color.fromARGB(255, 99, 112, 255),
+                                color: Color.fromARGB(255, 112, 129, 245),
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(
-                                    color: const Color.fromARGB(255, 50, 61, 180),
+                                    color: Color.fromARGB(255, 112, 129, 245),
                                     width: 2, //太さ
                                   ),
                                   borderRadius: BorderRadius.all(
