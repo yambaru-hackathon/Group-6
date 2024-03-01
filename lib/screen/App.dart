@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigator_scope/navigator_scope.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 // bottomNavigationBar tabs
 import 'election/election_list.dart';
@@ -56,31 +57,33 @@ class _AppScreenState extends ConsumerState<AppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UserIdScope(
-      child: Scaffold(
-          body: NavigatorScope(
-            currentDestination: currentTab,
-            destinationCount: tabs.length,
-            destinationBuilder: (context, index) {
-              return NestedNavigator(
-                navigatorKey: navigatorKeys[index],
-                builder: (context) => [
-                  ElectionList(),
-                  PopularVote(),
-                  Timeline(),
-                ][index],
-              );
-            },
-          ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: currentTab,
-            onDestinationSelected: onTabselected,
-            destinations: tabs,
-            indicatorColor: Colors.black12,
-            surfaceTintColor: Colors.black12,
-            shadowColor: Colors.black,
-          ),
-          endDrawer: MyMenuBar(),
+    return FlutterEasyLoading(
+      child: UserIdScope(
+        child: Scaffold(
+            body: NavigatorScope(
+              currentDestination: currentTab,
+              destinationCount: tabs.length,
+              destinationBuilder: (context, index) {
+                return NestedNavigator(
+                  navigatorKey: navigatorKeys[index],
+                  builder: (context) => [
+                    ElectionList(),
+                    PopularVote(),
+                    Timeline(),
+                  ][index],
+                );
+              },
+            ),
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: currentTab,
+              onDestinationSelected: onTabselected,
+              destinations: tabs,
+              indicatorColor: Colors.black12,
+              surfaceTintColor: Colors.black12,
+              shadowColor: Colors.black,
+            ),
+            endDrawer: MyMenuBar(),
+        ),
       ),
     );
   }

@@ -3,6 +3,8 @@ import 'screen/signin/sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +30,13 @@ class MyApp extends StatelessWidget {
         fontFamily: 'NotoSansJP',
       ),
       home: const SignIn(),
+      builder: (BuildContext context, Widget? child) {
+        EasyLoading.instance
+          ..maskType = EasyLoadingMaskType.black;
+        return FlutterEasyLoading(
+          child: child,
+        );
+      },
     );
   }
 }

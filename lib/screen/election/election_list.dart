@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/app_bar.dart';
 import 'lower_house.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 //local
 import '../signup/enter_personal_data.dart';
@@ -69,21 +70,9 @@ class _ElectionListState extends ConsumerState<ElectionList> {
         duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
-  void _fetchData() async {
+  Future<void> _fetchData() async {
+    EasyLoading.show(status: 'loading...');
     // データベースから選挙情報を取得
-    lowerHouseData = await electionData.doc('lowerHouse').get();
-    upperHouseData = await electionData.doc('upperHouse').get();
-
-    setState(() {
-      _electionList[0]['id'] = lowerHouseData['name'];
-      _electionList[1]['id'] = upperHouseData['name'];
-      _electionList[0]['date'] = "${lowerHouseData['untilDate']} まで";
-      _electionList[1]['date'] = "${upperHouseData['untilDate']} まで";
-    });
-  }
-
-  void _fetchUserData() async {
-    // データベースからユーザーの投票履歴を取得
     lowerHouseData = await electionData.doc('lowerHouse').get();
     upperHouseData = await electionData.doc('upperHouse').get();
 
@@ -92,30 +81,31 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     final String lowerHouseVote = userData['lowerHouseVote'];
     userMyNumber = userData['myNumber'];
 
-    // 選挙が終了している場合、選挙リストから削除
-    // 衆議院選挙
     setState(() {
+      _electionList[0]['id'] = lowerHouseData['name'];
+      _electionList[1]['id'] = upperHouseData['name'];
+      _electionList[0]['date'] = "${lowerHouseData['untilDate']} まで";
+      _electionList[1]['date'] = "${upperHouseData['untilDate']} まで";
+
       if (lowerHouseVote.isNotEmpty) {
         // debugPrint('vote history of user is fetched');
         _electionList
             .removeWhere((element) => element['id'] == lowerHouseData['name']);
       }
     });
+    EasyLoading.dismiss();
   }
 
   @override
   void initState() {
+    _fetchData();
     // TODO: implement initState
     super.initState();
-
-    _fetchData();
-    _fetchUserData();
   }
 
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
-    _fetchUserData();
     return Scaffold(
       appBar: myAppBar(context, '選挙を選ぶ'),
       body: Container(
@@ -128,7 +118,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
             children: <Widget>[
               Stack(children: [
                 SizedBox(
-                  height: 400,
+                  height: 300,
                   child: ListWheelScrollView(
                     controller: _controller,
                     diameterRatio: 50, //リストの間の幅
@@ -324,8 +314,11 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: true,)),
-                              (route) => false,
+                              builder: (context) => EnterPersonalData(
+                                    isInitText: true,
+                                    isFromAppScreen: true,
+                                  )),
+                          (route) => false,
                         );
                       },
                       child: Text(
@@ -352,7 +345,9 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     final user = await users.doc(ref.read(userIdProvider)).get();
     final String myNumber = user['myNumber'];
 
-    if (page == 'lower_house' && myNumber.isNotEmpty) {
+    if (page == 'lower_house' &&
+        myNumber.isNotEmpty &&
+        user['prefecture'] != 'エラー') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LowerHouse()),

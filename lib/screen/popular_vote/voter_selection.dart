@@ -49,28 +49,24 @@ class _PopularVoteState extends State<VoterSelection> {
       appBar: myAppBar(context, '$id'),
       body:
           //政治家・入力分割
-          Expanded(
-        child: ClipRect(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              //政治家Widgetを書き込む
-              Container(
-                height: MediaQuery.of(context).size.height - 355,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(13),
-                  ),
-                ),
-                child: buildLowersList(),
+          Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          //政治家Widgetを書き込む
+          Container(
+            height: MediaQuery.of(context).size.height - 355,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(13),
               ),
-              //＋ー・円スライダー分割
-              Expanded(
-                child: buildCircleSlider(),
-              ),
-            ],
+            ),
+            child: buildLowersList(),
           ),
-        ),
+          //＋ー・円スライダー分割
+          Expanded(
+            child: buildCircleSlider(),
+          ),
+        ],
       ),
     );
   }
@@ -147,71 +143,74 @@ class _PopularVoteState extends State<VoterSelection> {
   }
 
   Widget buildLowersList() {
-    return ListView(
-      children: <Widget>[
-        for (int i = 0; i < 6; i++)
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ConfirmVotingPage(
-                  popularVoteCurrentPoint: popularVoteCurrentPoint,
-                ),
-              ));
-            },
-            child: Container(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  SizedBox(width: 10),
-                  Container(
-                    padding: EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Color.fromARGB(255, 183, 230, 215),
-                        width: 2,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView(
+        children: <Widget>[
+          for (int i = 0; i < 10; i++)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ConfirmVotingPage(
+                      popularVoteCurrentPoint: popularVoteCurrentPoint,
+                    ),
+                  ));
+                },
+                child: Row(
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Color.fromARGB(255, 183, 230, 215),
+                          width: 2,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 36.0,
+                        backgroundImage:
+                            AssetImage('assets/images/politician_img.png'),
                       ),
                     ),
-                    child: CircleAvatar(
-                      radius: 36.0,
-                      backgroundImage:
-                          AssetImage('assets/images/politician_img.png'),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                        ),
-                        Text(
-                          'Texttttttttttttttt',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        Container(
-                          width: 150,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Color.fromARGB(255, 137, 198, 179),
-                                width: 5,
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 50,
+                          ),
+                          Text(
+                            'Texttttttttttttttt',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          Container(
+                            width: 150,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Color.fromARGB(255, 137, 198, 179),
+                                  width: 5,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  //CheckBox(),
-//                  Center(
-//                    child: CheckboxWidget(),
-//                  ),
-                ],
+                    //CheckBox(),
+                //                  Center(
+                //                    child: CheckboxWidget(),
+                //                  ),
+                  ],
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
