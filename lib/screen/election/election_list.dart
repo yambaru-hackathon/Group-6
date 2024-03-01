@@ -73,7 +73,6 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   }
 
   Future<void> _fetchData() async {
-    EasyLoading.show(status: 'loading...');
     // データベースから選挙情報を取得
     lowerHouseData = await electionData.doc('lowerHouse').get();
     upperHouseData = await electionData.doc('upperHouse').get();
@@ -95,7 +94,21 @@ class _ElectionListState extends ConsumerState<ElectionList> {
             .removeWhere((element) => element['id'] == lowerHouseData['name']);
       }
     });
-    EasyLoading.dismiss();
+  }
+
+  void _fetchUser() async {
+    lowerHouseData = await electionData.doc('lowerHouse').get();
+    upperHouseData = await electionData.doc('upperHouse').get();
+
+    final uid = ref.read(userIdProvider);
+    final userData = await users.doc(uid).get();
+    final String lowerHouseVote = userData['lowerHouseVote'];
+
+      if (lowerHouseVote.isNotEmpty) {
+        // debugPrint('vote history of user is fetched');
+        _electionList
+            .removeWhere((element) => element['id'] == lowerHouseData['name']);
+      }
   }
 
   @override
@@ -107,6 +120,8 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   }
   @override
   Widget build(BuildContext context) {
+    _fetchData();
+    _fetchUser();
     return Scaffold(
       appBar: myAppBar(context, '選挙を選ぶ'),
       body: Container(
