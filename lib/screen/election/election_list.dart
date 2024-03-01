@@ -61,6 +61,8 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   String page = 'test';
   String userMyNumber = '';
 
+  int _selectedItemIndex = 0;
+
   final List<Map<String, dynamic>> _electionList =
       TwoDimensionalListGenerator().generateTwoDimensionalList(2);
 
@@ -99,11 +101,10 @@ class _ElectionListState extends ConsumerState<ElectionList> {
   @override
   void initState() {
     _fetchData();
+    page = _electionList[_selectedItemIndex]['page'];
     // TODO: implement initState
     super.initState();
   }
-
-  int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
