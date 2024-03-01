@@ -1,8 +1,11 @@
+// 必要なパッケージのインポート
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:happyhappyhappy/screen/signin/standby.dart';
 part 'auth_state.g.dart';
 
 ///
@@ -58,20 +61,15 @@ class UserIdScope extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     /// サインインしているユーザーの情報
     final user = ref.watch(userProvider);
+    debugPrint(user.toString());
     if (user == null) {
-      // ユーザーが見つからないとき グルグル
-      return ProviderScope(
-        overrides: [
-          userIdProvider.overrideWithValue('anonymous'),
-        ],
-        child: child
-      );
+      return const StandBy();
     } else {
       // ユーザーが見つかったとき
       return ProviderScope(
         // ユーザーIDを上書き
         overrides: [
-          userIdProvider.overrideWithValue(user.email!),
+          userIdProvider.overrideWithValue(user.uid),
         ],
         child: child,
       );
