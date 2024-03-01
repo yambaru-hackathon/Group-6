@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -22,8 +23,6 @@ FormFieldValidator _requiredValidator(BuildContext context) => (val) => val.isEm
 class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _ProfileData _data = _ProfileData();
-  final _authService = AuthService();
-
   // 入力の重複調べる変数
   TextEditingController emailin = TextEditingController();
   TextEditingController emailAgainin = TextEditingController();
@@ -46,6 +45,30 @@ class _SignUpState extends State<SignUp> {
   // 入力の表示非表示
   bool _isObscure = true;
   bool _isObscureAgain = true;
+  
+  bool email_Wrongformat = false;
+  bool pass_Wrongformat = false;
+
+  Future<void> _test() async {
+      _formKey.currentState!.save();  
+      try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        // email: 'test@test.com',
+        // password: 'password',
+        email: _data.email,
+        password: _data.pass,
+      );
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'lowerHouseVote': '2',
+        'myNumber': '123456789012',
+        'postcode': '9010123',
+        'prefecture': '沖縄県',
+        'senkyokuNum': '999'
+      });
+      } catch (error) {
+      print('Error registering user: $error');
+    }
+  }
 
   Future<void> _submit() async {
     // バリデートして問題なければ実行
@@ -56,25 +79,45 @@ class _SignUpState extends State<SignUp> {
       // キーボードを隠す（それぞれのonSavedに書いたほうがいいかも）
       _nameFocusNode.unfocus();
       _descriptionFocusNode.unfocus();
-      
-      try{
-        await _authService.signIn(_data.email, _data.pass);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const AppScreen())
-        );
+      try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _data.email,
+        password: _data.pass,
+      );
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'lowerHouseVote': '',
+        'myNumber': '',
+        'postcode': '',
+        'prefecture': '',
+        'senkyokuNum': ''
+      });
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
-        }
+
+       if (e.code == 'email-already-in-use') {
+         print('指定したメールアドレスは登録済みです');
+         
+       } else if (e.code == 'invalid-email') {
+         print('メールアドレスのフォーマットが正しくありません');
+
         setState(() {
-          signInFailed = true;
+          email_Wrongformat = true;
         });
+       } else if (e.code == 'operation-not-allowed') {
+         print('指定したメールアドレス・パスワードは現在使用できません');
+       } else if (e.code == 'weak-password') {
+         print('パスワードは６文字以上にしてください');
+
+        setState(() {
+          pass_Wrongformat = true;
+        });
+       }
+        /// その他エラー
+        else {
+          print('アカウント作成エラー: ${e.code}');
+        }
+      } catch (e) {
+        print(e);
       }
-      // debugPrint(FirebaseAuth.instance.currentUser?.uid);
-      // ignore: use_build_context_synchronously
     }
   }
   @override
@@ -200,6 +243,11 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                       ),
+                      Visibility(
+                        child: Text('Please @ add'),
+                        visible: email_Wrongformat, // ここで隠すか表示するかを選択する
+                      ),
+
                       const SizedBox(height: 16.0),
                       //パスワード入力フィールド(ノーマル)
                       TextFormField(
@@ -263,8 +311,12 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                       ),
+                      Visibility(
+                        child: Text('Please 6 or more characters'),
+                        visible: pass_Wrongformat, // ここで隠すか表示するかを選択する
+                      ),
                       const SizedBox(height: 5.0),
-                      ElevatedButton(onPressed: _submit, child: const Text('Submit'))
+                      ElevatedButton(onPressed: _submit, child: const Text('Submit')),
                     ],
                   ),
                 )
