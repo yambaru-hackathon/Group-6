@@ -5,6 +5,8 @@ import 'package:path/path.dart';
 import '../App.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 //firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,33 +19,20 @@ final myNumberController = TextEditingController();
 final postcodeController = TextEditingController();
 bool isSaveText = false;
 
-Future<void> bulidCamera() async {
+Future<void> bulidCamera(BuildContext context) async {
   // main 関数内で非同期処理を呼び出すための設定
   WidgetsFlutterBinding.ensureInitialized();
   // デバイスで使用可能なカメラのリストを取得
   final cameras = await availableCameras();
   // 利用可能なカメラのリストから特定のカメラを取得
   final firstCamera = cameras.first;
-  runApp(MyApp(camera: firstCamera));
+  
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)), // カメラ情報を渡す
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({
-    Key? key,
-    required this.camera,
-  }) : super(key: key);
-
-  final CameraDescription camera;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Camera Example',
-      theme: ThemeData(),
-      home: TakePictureScreen(camera: camera),
-    );
-  }
-}
 
 /// 写真撮影画面
 class TakePictureScreen extends StatefulWidget {
@@ -155,8 +144,7 @@ class DisplayPictureScreen extends StatelessWidget {
 }
 
 // 最初の画面
-class EnterPersonalData extends StatefulWidget { 
-
+class EnterPersonalData extends StatefulWidget {
   @override
   State<EnterPersonalData> createState() => EnterPersonalDataState();
 }
@@ -173,27 +161,69 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
   // FormField
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final uid = FirebaseAuth.instance.currentUser?.uid;
 
-  Future<void> submit() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    // 郵便番号
+  String postcode = '';
+  String postcodeFirst = '';
 
-      debugPrint('郵便番号: ${_data.postcode}');
-      debugPrint('マイナンバー: ${_data.myNumber}');
+  //選挙区コード
+  String prefectureCode = '';
+  String districtNum = '';
 
-      users.doc(uid).update({
-        'postcode': _data.postcode,
-        'myNumber': _data.myNumber,
-      });
-    }
+  // 選挙区
+  String prefectureText = '';
+  String hireiDistrictText = '';
+  String electoralDistrictText = '';
+
+  Future<void> loadJsonAsset() async {
+    final String hireiJsonString =
+        await rootBundle.loadString('assets/json/hirei.json');
+    final dynamic hireiJsonResponse = json.decode(hireiJsonString);
+    final String postalJsonString =
+        await rootBundle.loadString('assets/json/postal2senkyoku.light.json');
+    final dynamic postalJsonResponse = json.decode(postalJsonString);
+    setState(() {
+      postcodeFirst = postcodeController.text.substring(0, 3);
+      try {
+        if (postalJsonResponse[postcodeFirst] != null) {
+          prefectureCode = postalJsonResponse[postcodeFirst]['p'];
+          districtNum = postalJsonResponse[postcodeFirst]['s'];
+        } else {
+          prefectureCode = postalJsonResponse[postcodeController.text]['p'];
+          districtNum = postalJsonResponse[postcodeController.text]['s'];
+        }
+        prefectureText = hireiJsonResponse[prefectureCode]['prefecture'];
+        hireiDistrictText = hireiJsonResponse[prefectureCode]['region'];
+
+        electoralDistrictText = '$prefectureText $districtNum区';
+      } catch (e) {
+        prefectureText = 'エラー';
+        hireiDistrictText = 'エラー';
+        electoralDistrictText = 'エラー';
+      }
+    });
+
+    debugPrint(prefectureText);
+    debugPrint(hireiDistrictText);
+    debugPrint(electoralDistrictText);
+  }
+
+  Future<void> submit(BuildContext context) async {
+    await loadJsonAsset();
+    await users.doc(uid).update({
+      'postcode': postcodeController.text,
+      'myNumber': myNumberController.text,
+      'prefecture': prefectureText,
+      'senkyokuNum': districtNum,
+    });
   }
 
   @override
   void dispose() {
     debugPrint(postcodeController.text);
     debugPrint(myNumberController.text);
-    if (!isSaveText){
+    if (!isSaveText) {
       myNumberController.dispose();
       postcodeController.dispose();
     }
@@ -203,8 +233,8 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(_data.postcode);
-    debugPrint(_data.myNumber);
+    debugPrint(myNumberController.text);
+    debugPrint(postcodeController.text);
     return Scaffold(
       body: Center(
         child: Column(
@@ -236,6 +266,8 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        maxLength: 7,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         validator: _requiredValidator(context),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
@@ -256,6 +288,8 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        maxLength: 12,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
                         validator: _requiredValidator(context),
                         onSaved: (String? value) => _data.myNumber = value!,
                         keyboardType: TextInputType.number,
@@ -282,7 +316,7 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                         context,
                         MaterialPageRoute(builder: (context) => TakePictureScreen()), // カメラ情報を渡す
                       );*/
-                      bulidCamera();
+                      bulidCamera(context);
                     },
                     child: Container(
                       width: 240,
@@ -319,8 +353,15 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                 width: 150,
                 height: 50,
                 child: TextButton(
-                  onPressed: () {
-                    submit();
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await submit(context);
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AppScreen()),
+                      );
+                    }
                   },
                   child: Text(
                     '登録完了',
@@ -346,7 +387,10 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                 height: 40,
                 child: TextButton(
                   onPressed: () {
-                    submit();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AppScreen()),
+                    );
                   },
                   child: Text(
                     'あとで',
