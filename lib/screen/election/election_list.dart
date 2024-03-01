@@ -120,216 +120,218 @@ class _ElectionListState extends ConsumerState<ElectionList> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Color.fromARGB(255, 255, 255, 255),
-        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Stack(children: [
-                SizedBox(
-                  height: 400,
-                  child: ListWheelScrollView(
-                    controller: _controller,
-                    diameterRatio: 50, //リストの間の幅
-                    itemExtent: 150, //リストの幅
-                    //                overAndUnderCenterOpacity: 0.5, //透明度
-                    perspective: 0.0001, //まるみ
-                    useMagnifier: false, //拡大するか否か
-                    magnification: 1, //拡大のどあい
-                    physics: FixedExtentScrollPhysics(),
-                    onSelectedItemChanged: (int index) {
-                      // update the UI on selected item changes
-                      setState(() {
-                        _selectedItemIndex = index;
-                        page = _electionList[index]['page'];
-                      });
-                    },
-                    children: [
-                      for (var map in _electionList)
-                        Container(
-                          width: 500,
-                          height: 300,
-                          child: Card(
-                            shadowColor: Colors.black,
-                            elevation:
-                                _selectedItemIndex == map['order'] ? 30 : 0,
-                            margin: _selectedItemIndex == map['order']
-                                ? const EdgeInsets.only(
-                                    right: 60,
-                                    left: 60,
-                                  )
-                                : _selectedItemIndex < map['order']
-                                    ? const EdgeInsets.only(
-                                        top: 10,
-                                        bottom: 30,
-                                        right: 90,
-                                        left: 90,
-                                      )
-                                    : const EdgeInsets.only(
-                                        top: 30,
-                                        bottom: 10,
-                                        right: 90,
-                                        left: 90,
-                                      ),
-                            color: _selectedItemIndex == map['order']
-                                ? Color.fromARGB(255, 99, 112, 255)
-                                : _selectedItemIndex + 1 == map['order'] ||
-                                        _selectedItemIndex - 1 == map['order']
-                                    ? Colors.white
-                                    : Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: _selectedItemIndex + 1 == map['order'] ||
-                                        _selectedItemIndex - 1 == map['order']
-                                    ? const Color.fromARGB(255, 50, 61, 180)
-                                    : Colors.transparent, //色
-                                width: 2, //太さ
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                                // BorderRadius.only(
-                                //                            topLeft: _selectedItemIndex < map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            topRight: _selectedItemIndex < map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            bottomLeft: _selectedItemIndex > map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                                //                            bottomRight: _selectedItemIndex > map['order']
-                                //                                ? Radius.zero
-                                //                                : Radius.circular(10),
-                              ),
-                            ),
-                            child: InkWell(
-                              splashColor:
-                                  const Color.fromARGB(255, 148, 207, 255)
-                                      .withAlpha(30),
-                              onTap: () {
-                                setState(() {
-                                  _selectedItemIndex = map['order'];
-                                  _scroll(map['order']);
-                                  page = map['page'];
-                                });
-                                debugPrint('Card taped');
-                              },
-                              child: Center(
-                                child: Text(
-                                  _selectedItemIndex == map['order']
-                                      ? (map['id']) +
-                                          '\n' +
-                                          (map['date']).toString()
-                                      : (map['id']),
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
+        child: ClipRect(
+          child: Column(
+          //          mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 50.0),
+                child: Stack(children: [
+                  SizedBox(
+                    height: 400,
+                    child: ListWheelScrollView(
+                      controller: _controller,
+                      diameterRatio: 50, //リストの間の幅
+                      itemExtent: 150, //リストの幅
+                      //                overAndUnderCenterOpacity: 0.5, //透明度
+                      perspective: 0.0001, //まるみ
+                      useMagnifier: false, //拡大するか否か
+                      magnification: 1, //拡大のどあい
+                      physics: FixedExtentScrollPhysics(),
+                      onSelectedItemChanged: (int index) {
+                        // update the UI on selected item changes
+                        setState(() {
+                          _selectedItemIndex = index;
+                          page = _electionList[index]['page'];
+                        });
+                      },
+                      children: [
+                        for (var map in _electionList)
+                          Container(
+                            width: 500,
+                            height: 300,
+                            child: Card(
+                              shadowColor: Colors.black,
+                              elevation:
+                                  _selectedItemIndex == map['order'] ? 30 : 0,
+                              margin: _selectedItemIndex == map['order']
+                                  ? const EdgeInsets.only(
+                                      right: 60,
+                                      left: 60,
+                                    )
+                                  : _selectedItemIndex < map['order']
+                                      ? const EdgeInsets.only(
+                                          top: 10,
+                                          bottom: 30,
+                                          right: 90,
+                                          left: 90,
+                                        )
+                                      : const EdgeInsets.only(
+                                          top: 30,
+                                          bottom: 10,
+                                          right: 90,
+                                          left: 90,
+                                        ),
+                              color: _selectedItemIndex == map['order']
+                                  ? Color.fromARGB(255, 99, 112, 255)
+                                  : _selectedItemIndex + 1 == map['order'] ||
+                                          _selectedItemIndex - 1 == map['order']
+                                      ? Colors.white
+                                      : Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: _selectedItemIndex + 1 == map['order'] ||
+                                          _selectedItemIndex - 1 == map['order']
+                                      ? const Color.fromARGB(255, 50, 61, 180)
+                                      : Colors.transparent, //色
+                                  width: 2, //太さ
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                  // BorderRadius.only(
+                                  //                            topLeft: _selectedItemIndex < map['order']
+                                  //                                ? Radius.zero
+                                  //                                : Radius.circular(10),
+                                  //                            topRight: _selectedItemIndex < map['order']
+                                  //                                ? Radius.zero
+                                  //                                : Radius.circular(10),
+                                  //                            bottomLeft: _selectedItemIndex > map['order']
+                                  //                                ? Radius.zero
+                                  //                                : Radius.circular(10),
+                                  //                            bottomRight: _selectedItemIndex > map['order']
+                                  //                                ? Radius.zero
+                                  //                                : Radius.circular(10),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              
-                // 選挙リストがない場合、選挙リストがないことを表示
-                _electionList.length == 0
-                    ? SizedBox(
-                        height: 400,
-                        child: ListWheelScrollView(
-                          controller: _controller,
-                          diameterRatio: 50, //リストの間の幅
-                          itemExtent: 150, //リストの幅
-                          //                overAndUnderCenterOpacity:0.5, //透明度
-                          perspective: 0.0001, //まるみ
-                          useMagnifier: false, //拡大するか否か
-                          magnification: 1, //拡大のどあい
-                          physics: FixedExtentScrollPhysics(),
-                          onSelectedItemChanged: (int index) {
-                            // update the UI on selected item changes
-                            setState(() {
-                              _selectedItemIndex = index;
-                            });
-                          },
-                          children: [
-                            Container(
-                              width: 500,
-                              height: 300,
-                              child: Card(
-                                shadowColor: Colors.black,
-                                elevation: 30,
-                                margin: const EdgeInsets.only(
-                                  right: 60,
-                                  left: 60,
-                                ),
-                                color: Color.fromARGB(255, 99, 112, 255),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: const Color.fromARGB(255, 50, 61, 180),
-                                    width: 2, //太さ
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: InkWell(
-                                  splashColor:
-                                      const Color.fromARGB(255, 148, 207, 255)
-                                          .withAlpha(30),
-                                  onTap: () {
-                                    debugPrint('Card taped');
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Coming soon',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
+                              child: InkWell(
+                                splashColor:
+                                    const Color.fromARGB(255, 148, 207, 255)
+                                        .withAlpha(30),
+                                onTap: () {
+                                  setState(() {
+                                    _selectedItemIndex = map['order'];
+                                    _scroll(map['order']);
+                                    page = map['page'];
+                                  });
+                                  debugPrint('Card taped');
+                                },
+                                child: Center(
+                                  child: Text(
+                                    _selectedItemIndex == map['order']
+                                        ? (map['id']) +
+                                            '\n' +
+                                            (map['date']).toString()
+                                        : (map['id']),
+                                    style: TextStyle(
+                                      fontSize: 20,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                    : SizedBox(), // 選挙リストがある場合何も表示しない
-              ]),
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 110.5),
-              child: SizedBox(
-                width: 200,
-                height: 70,
-                child: ElevatedButton(
-                  onPressed: () {
-                    onPressedToVoting();
-                  },
-                  child: RichText(
-                    text: const TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '投票画面',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 112, 129, 245),
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: 'へGO!',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 112, 129, 245),
-                            fontSize: 18,
                           ),
-                        ),
                       ],
+                    ),
+                  ),
+                
+                  // 選挙リストがない場合、選挙リストがないことを表示
+                  _electionList.length == 0
+                      ? SizedBox(
+                          height: 400,
+                          child: ListWheelScrollView(
+                            controller: _controller,
+                            diameterRatio: 50, //リストの間の幅
+                            itemExtent: 150, //リストの幅
+                            //                overAndUnderCenterOpacity:0.5, //透明度
+                            perspective: 0.0001, //まるみ
+                            useMagnifier: false, //拡大するか否か
+                            magnification: 1, //拡大のどあい
+                            physics: FixedExtentScrollPhysics(),
+                            onSelectedItemChanged: (int index) {
+                              // update the UI on selected item changes
+                              setState(() {
+                                _selectedItemIndex = index;
+                              });
+                            },
+                            children: [
+                              Container(
+                                width: 500,
+                                height: 300,
+                                child: Card(
+                                  shadowColor: Colors.black,
+                                  elevation: 30,
+                                  margin: const EdgeInsets.only(
+                                    right: 60,
+                                    left: 60,
+                                  ),
+                                  color: Color.fromARGB(255, 99, 112, 255),
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: const Color.fromARGB(255, 50, 61, 180),
+                                      width: 2, //太さ
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                  ),
+                                  child: InkWell(
+                                    splashColor:
+                                        const Color.fromARGB(255, 148, 207, 255)
+                                            .withAlpha(30),
+                                    onTap: () {
+                                      debugPrint('Card taped');
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Coming soon',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox(), // 選挙リストがある場合何も表示しない
+                ]),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: SizedBox(
+                  width: 200,
+                  height: 70,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      onPressedToVoting();
+                    },
+                    child: RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '投票画面',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 112, 129, 245),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: 'へGO!',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 112, 129, 245),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
