@@ -79,7 +79,7 @@ class _SignUpState extends State<SignUp> {
           'senkyokuNum': ''
         });
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => EnterPersonalData()));
+            MaterialPageRoute(builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: false,)));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'email-already-in-use') {
           print('指定したメールアドレスは登録済みです');

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../politician/politician.dart';
 
+//local
+import '../../components/app_bar.dart';
+
 class Timeline extends StatefulWidget {
   const Timeline({super.key});
 
@@ -27,17 +30,8 @@ class _TimelineState extends State<Timeline> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'This is Timeline screen.',
+              '開発中です',
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Politician())
-                );
-              },
-              child: const Text('to politician screen')
-            )
           ],
         ),
       ),

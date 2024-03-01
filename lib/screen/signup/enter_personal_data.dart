@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
-import '../App.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -12,11 +11,15 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//local
+import '../election/election_list.dart';
+import '../App.dart';
+
 final users = FirebaseFirestore.instance.collection('users');
 
 final ProfileData _data = ProfileData();
-final myNumberController = TextEditingController();
-final postcodeController = TextEditingController();
+var myNumberController = TextEditingController();
+var postcodeController = TextEditingController();
 bool isSaveText = false;
 
 Future<void> bulidCamera(BuildContext context) async {
@@ -26,13 +29,14 @@ Future<void> bulidCamera(BuildContext context) async {
   final cameras = await availableCameras();
   // 利用可能なカメラのリストから特定のカメラを取得
   final firstCamera = cameras.first;
-  
+
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)), // カメラ情報を渡す
+    MaterialPageRoute(
+        builder: (context) =>
+            TakePictureScreen(camera: firstCamera)), // カメラ情報を渡す
   );
 }
-
 
 /// 写真撮影画面
 class TakePictureScreen extends StatefulWidget {
@@ -131,7 +135,9 @@ class DisplayPictureScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EnterPersonalData()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EnterPersonalData(isInitText: false, isFromAppScreen: false,)),
                 );
               },
               child: Text('確認した'),
@@ -145,6 +151,10 @@ class DisplayPictureScreen extends StatelessWidget {
 
 // 最初の画面
 class EnterPersonalData extends StatefulWidget {
+  final bool isInitText;
+  final bool isFromAppScreen;
+  const EnterPersonalData({required this.isInitText, required this.isFromAppScreen});
+
   @override
   State<EnterPersonalData> createState() => EnterPersonalDataState();
 }
@@ -163,7 +173,7 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
 
   final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    // 郵便番号
+  // 郵便番号
   String postcode = '';
   String postcodeFirst = '';
 
@@ -217,6 +227,16 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
       'prefecture': prefectureText,
       'senkyokuNum': districtNum,
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.isInitText) {
+      myNumberController = TextEditingController();
+      postcodeController = TextEditingController();
+    }
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -357,6 +377,7 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                     if (_formKey.currentState!.validate()) {
                       await submit(context);
 
+                      isSaveText = false;
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => AppScreen()),
@@ -387,10 +408,17 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                 height: 40,
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AppScreen()),
-                    );
+                    if (widget.isFromAppScreen) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ElectionList())
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AppScreen()),
+                      );
+                    }
                   },
                   child: Text(
                     'あとで',

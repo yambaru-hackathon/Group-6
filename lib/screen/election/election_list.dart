@@ -5,7 +5,7 @@ import '../../components/app_bar.dart';
 import 'lower_house.dart';
 
 //local
-
+import '../signup/enter_personal_data.dart';
 import '../../provider/auth_state.dart';
 
 class ElectionList extends ConsumerStatefulWidget {
@@ -58,6 +58,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
 
   final _controller = FixedExtentScrollController(initialItem: 0);
   String page = 'test';
+  String userMyNumber = '';
 
   final List<Map<String, dynamic>> _electionList =
       TwoDimensionalListGenerator().generateTwoDimensionalList(2);
@@ -81,7 +82,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     });
   }
 
-  void _fetchUserVote() async {
+  void _fetchUserData() async {
     // データベースからユーザーの投票履歴を取得
     lowerHouseData = await electionData.doc('lowerHouse').get();
     upperHouseData = await electionData.doc('upperHouse').get();
@@ -89,6 +90,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     final uid = ref.read(userIdProvider);
     final userData = await users.doc(uid).get();
     final String lowerHouseVote = userData['lowerHouseVote'];
+    userMyNumber = userData['myNumber'];
 
     // 選挙が終了している場合、選挙リストから削除
     // 衆議院選挙
@@ -107,13 +109,13 @@ class _ElectionListState extends ConsumerState<ElectionList> {
     super.initState();
 
     _fetchData();
-    _fetchUserVote();
+    _fetchUserData();
   }
 
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
-    _fetchUserVote();
+    _fetchUserData();
     return Scaffold(
       appBar: myAppBar(context, '選挙を選ぶ'),
       body: Container(
@@ -327,6 +329,38 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                   ),
                 ),
               ),
+              if (userMyNumber.isEmpty)
+                Column(
+                  children: [
+                    Text(
+                      'マイナンバーが登録されていないので投票できません',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.red,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: true)),
+                              (route) => false,
+                        );
+                      },
+                      child: Text(
+                        'マイナンバーを登録する',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.red,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
             ],
           ),
         ),
