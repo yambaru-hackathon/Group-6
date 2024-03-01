@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
 
 //firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,18 +20,84 @@ final myNumberController = TextEditingController();
 final postcodeController = TextEditingController();
 bool isSaveText = false;
 
-Future<void> bulidCamera(BuildContext context) async {
+
+enum CameraPermissionStatus {
+  granted,
+  denied,
+  restricted,
+  limited,
+  permanentlyDenied
+}
+
+class CameraPermissionsHandler {
+  Future<bool> get isGranted async {
+    final status = await Permission.camera.status;
+    switch (status) {
+      case PermissionStatus.granted:
+      case PermissionStatus.limited:
+        return true;
+      case PermissionStatus.denied:
+      case PermissionStatus.permanentlyDenied:
+      case PermissionStatus.restricted:
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  Future<CameraPermissionStatus> request() async {
+    final status = await Permission.camera.request();
+    switch (status) {
+      case PermissionStatus.granted:  //許可されている状態
+        return CameraPermissionStatus.granted;
+      case PermissionStatus.denied:   //拒否されている状態
+        return CameraPermissionStatus.denied;
+      case PermissionStatus.limited:  //一時的に制限されている
+        return CameraPermissionStatus.limited;
+      case PermissionStatus.restricted: //
+        return CameraPermissionStatus.restricted;
+      case PermissionStatus.permanentlyDenied:
+        return CameraPermissionStatus.permanentlyDenied;
+      default:
+        return CameraPermissionStatus.denied;
+    }
+  }
+}
+
+
+Future<void> bulidCamera() async {
   // main 関数内で非同期処理を呼び出すための設定
   WidgetsFlutterBinding.ensureInitialized();
   // デバイスで使用可能なカメラのリストを取得
   final cameras = await availableCameras();
   // 利用可能なカメラのリストから特定のカメラを取得
   final firstCamera = cameras.first;
-  
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => TakePictureScreen(camera: firstCamera)), // カメラ情報を渡す
-  );
+
+  CameraPermissionStatus permissionStatus = await CameraPermissionsHandler().request();
+  if (permissionStatus == CameraPermissionStatus.granted){
+    runApp(MyApp(camera: firstCamera));
+  }
+  else {
+    print('カメラの使用を許可してください');
+  }
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({
+    Key? key,
+    required this.camera,
+  }) : super(key: key);
+
+  final CameraDescription camera;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Camera Example',
+      theme: ThemeData(),
+      home: TakePictureScreen(camera: camera),
+    );
+  }
 }
 
 
@@ -124,6 +191,7 @@ class DisplayPictureScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 //onpressed,
+                 Navigator.pop(context);
               },
               child: Text('取り直す'),
             ),
@@ -316,7 +384,7 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                         context,
                         MaterialPageRoute(builder: (context) => TakePictureScreen()), // カメラ情報を渡す
                       );*/
-                      bulidCamera(context);
+                      bulidCamera();
                     },
                     child: Container(
                       width: 240,

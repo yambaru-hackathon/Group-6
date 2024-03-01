@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../provider/auth_service.dart';
 import '../App.dart';
 import '../signup/sign_up.dart';
+import '../signup/enter_personal_data.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -256,7 +257,7 @@ class _SignInState extends State<SignIn> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUp()));
+                                        builder: (context) => EnterPersonalData()));
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
