@@ -61,7 +61,7 @@ class _ElectionListState extends State<PopularVote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(context, '選挙を選ぶ'),
+      appBar: myAppBar(context, '開催中の人気投票(開発中)'),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -185,7 +185,7 @@ class _ElectionListState extends State<PopularVote> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                voterSelection(id: id, page: page)),
+                                VoterSelection(id: id)),
                       );
                     },
                     child: RichText(
