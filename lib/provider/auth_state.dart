@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:happyhappyhappy/screen/signin/standby.dart';
+import 'package:happyhappyhappy/screen/signin/sign_in.dart';
 part 'auth_state.g.dart';
 
 ///
@@ -63,7 +63,7 @@ class UserIdScope extends ConsumerWidget {
     final user = ref.watch(userProvider);
     debugPrint(user.toString());
     if (user == null) {
-      return const StandBy();
+      return const SignIn();
     } else {
       // ユーザーが見つかったとき
       return ProviderScope(
