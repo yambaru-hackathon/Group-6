@@ -324,7 +324,7 @@ class _ElectionListState extends ConsumerState<ElectionList> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: true)),
+                              builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: true,)),
                               (route) => false,
                         );
                       },

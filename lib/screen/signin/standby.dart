@@ -46,7 +46,7 @@ class _StandByState extends State<StandBy> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: false)));
+                          builder: (context) => EnterPersonalData(isInitText: true, isFromAppScreen: false,)));
                 },
                 child: const Text('マイナンバーページ開発用')),
           ],

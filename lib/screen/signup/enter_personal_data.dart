@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:permission_handler/permission_handler.dart';
 
 //firebase
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,21 +22,49 @@ final ProfileData _data = ProfileData();
 var myNumberController = TextEditingController();
 var postcodeController = TextEditingController();
 bool isSaveText = false;
+final isAllowedUsingCamera = false;
 
-Future<void> bulidCamera(BuildContext context) async {
-  // main 関数内で非同期処理を呼び出すための設定
-  WidgetsFlutterBinding.ensureInitialized();
-  // デバイスで使用可能なカメラのリストを取得
-  final cameras = await availableCameras();
-  // 利用可能なカメラのリストから特定のカメラを取得
-  final firstCamera = cameras.first;
+enum CameraPermissionStatus {
+  granted,
+  denied,
+  restricted,
+  limited,
+  permanentlyDenied
+}
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (context) =>
-            TakePictureScreen(camera: firstCamera)), // カメラ情報を渡す
-  );
+class CameraPermissionsHandler {
+  Future<bool> get isGranted async {
+    final status = await Permission.camera.status;
+    switch (status) {
+      case PermissionStatus.granted:
+      case PermissionStatus.limited:
+        return true;
+      case PermissionStatus.denied:
+      case PermissionStatus.permanentlyDenied:
+      case PermissionStatus.restricted:
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  Future<CameraPermissionStatus> request() async {
+    final status = await Permission.camera.request();
+    switch (status) {
+      case PermissionStatus.granted: //許可されている状態
+        return CameraPermissionStatus.granted;
+      case PermissionStatus.denied: //拒否されている状態
+        return CameraPermissionStatus.denied;
+      case PermissionStatus.limited: //一時的に制限されている
+        return CameraPermissionStatus.limited;
+      case PermissionStatus.restricted: //
+        return CameraPermissionStatus.restricted;
+      case PermissionStatus.permanentlyDenied:
+        return CameraPermissionStatus.permanentlyDenied;
+      default:
+        return CameraPermissionStatus.denied;
+    }
+  }
 }
 
 /// 写真撮影画面
@@ -80,16 +109,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('')),
       body: Center(
-        child: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return CameraPreview(_controller);
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 200.0),
+          child: FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return CameraPreview(_controller);
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -97,10 +130,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           // 写真を撮る
           final image = await _controller.takePicture();
           // 表示用の画面に遷移
-          await Navigator.of(context).push(
+          await Navigator.push(
+            context,
             MaterialPageRoute(
               builder: (context) => DisplayPictureScreen(imagePath: image.path),
-              fullscreenDialog: true,
             ),
           );
         },
@@ -125,22 +158,32 @@ class DisplayPictureScreen extends StatelessWidget {
         child: Column(
           children: [
             Image.file(File(imagePath)),
-            ElevatedButton(
-              onPressed: () {
-                //onpressed,
-              },
-              child: Text('取り直す'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          EnterPersonalData(isInitText: false, isFromAppScreen: false,)),
-                );
-              },
-              child: Text('確認した'),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                width: 150,
+                height: 50,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color.fromARGB(255, 137, 198, 179),
+                    width: 3,
+                  ),
+                  borderRadius: BorderRadius.circular(45),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    int count = 0;
+                    Navigator.popUntil(context, (_) => count++ >= 2);
+                  },
+                  child: Text(
+                    '完了!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -153,7 +196,8 @@ class DisplayPictureScreen extends StatelessWidget {
 class EnterPersonalData extends StatefulWidget {
   final bool isInitText;
   final bool isFromAppScreen;
-  const EnterPersonalData({required this.isInitText, required this.isFromAppScreen});
+  const EnterPersonalData(
+      {required this.isInitText, required this.isFromAppScreen});
 
   @override
   State<EnterPersonalData> createState() => EnterPersonalDataState();
@@ -170,8 +214,11 @@ FormFieldValidator _requiredValidator(BuildContext context) =>
 class EnterPersonalDataState extends State<EnterPersonalData> {
   // FormField
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  // ユーザーID
   final uid = FirebaseAuth.instance.currentUser?.uid;
+
+  // カメラ許可情報
+  bool isAllowedUsingCamera = true;
 
   // 郵便番号
   String postcode = '';
@@ -227,6 +274,33 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
       'prefecture': prefectureText,
       'senkyokuNum': districtNum,
     });
+  }
+
+  Future<void> bulidCamera(BuildContext context) async {
+    // main 関数内で非同期処理を呼び出すための設定
+    WidgetsFlutterBinding.ensureInitialized();
+    // デバイスで使用可能なカメラのリストを取得
+    final cameras = await availableCameras();
+    // 利用可能なカメラのリストから特定のカメラを取得
+    final firstCamera = cameras.first;
+
+    CameraPermissionStatus permissionStatus =
+        await CameraPermissionsHandler().request();
+    if (permissionStatus == CameraPermissionStatus.granted) {
+      setState(() {
+        isAllowedUsingCamera = true;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TakePictureScreen(camera: firstCamera),
+        ),
+      );
+    } else {
+      setState(() {
+        isAllowedUsingCamera = false;
+      });
+    }
   }
 
   @override
@@ -360,6 +434,9 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                 ],
               ),
             ),
+            isAllowedUsingCamera ? 
+              SizedBox(height: 0, width: 0) : Text('カメラの使用が許可されていません。', style: TextStyle(color: Colors.red),),
+            SizedBox(height: 20),
             // 登録ボタン
             Container(
               decoration: BoxDecoration(
@@ -378,10 +455,17 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                       await submit(context);
 
                       isSaveText = false;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AppScreen()),
-                      );
+                      if (widget.isFromAppScreen) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ElectionList()));
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AppScreen()),
+                        );
+                      }
                     }
                   },
                   child: Text(
@@ -410,9 +494,9 @@ class EnterPersonalDataState extends State<EnterPersonalData> {
                   onPressed: () {
                     if (widget.isFromAppScreen) {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ElectionList())
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ElectionList()));
                     } else {
                       Navigator.push(
                         context,
