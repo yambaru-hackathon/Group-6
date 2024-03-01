@@ -30,17 +30,25 @@ class _StandByState extends State<StandBy> {
               'This is standby screen. You can choose Sign in or Sign up.',
             ),
             ElevatedButton(
-              onPressed: () {Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SignIn())
-              );},
-              child: const Text('to sign in')),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const SignIn()));
+                },
+                child: const Text('to sign in')),
             ElevatedButton(
-              onPressed: () {Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EnterPersonalData())
-              );},
-              child: const Text('マイナンバーページ開発用')),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const SignUp()));
+                },
+                child: const Text('to sign up')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EnterPersonalData()));
+                },
+                child: const Text('マイナンバーページ開発用')),
           ],
         ),
       ),
